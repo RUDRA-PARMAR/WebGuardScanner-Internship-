@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGuard Security Scanner Dashboard</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            /* Light theme values */
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --card-border: #e2e8f0;
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            
+            --critical: #ef4444;
+            --high: #f97316;
+            --medium: #eab308;
+            --low: #3b82f6;
+            --info: #10b981;
+            
+            --critical-bg: rgba(239, 68, 68, 0.08);
+            --high-bg: rgba(249, 115, 22, 0.08);
+            --medium-bg: rgba(234, 179, 8, 0.08);
+            --low-bg: rgba(59, 130, 246, 0.08);
+            --info-bg: rgba(16, 185, 129, 0.08);
+            
+            --header-bg: linear-gradient(135deg, rgba(79, 70, 229, 0.06) 0%, rgba(192, 132, 252, 0.02) 100%);
+            --accordion-arrow-filter: none;
+            --accordion-body-bg: rgba(0, 0, 0, 0.02);
+            --spotlight-color: rgba(79, 70, 229, 0.06);
+            --history-item-bg: rgba(0, 0, 0, 0.02);
+            --history-item-hover: rgba(0, 0, 0, 0.04);
+            --history-item-active: rgba(79, 70, 229, 0.08);
+            --btn-outline-hover-bg: rgba(0, 0, 0, 0.03);
+            --navbar-bg: #ffffff;
+            
+            /* Vibe additions */
+            --grid-line: rgba(79, 70, 229, 0.035);
+            --hover-shadow-color: rgba(79, 70, 229, 0.06);
+            --hover-border-color: rgba(79, 70, 229, 0.25);
+            --laser-color: #f97316;
+        }
+
+        [data-theme="dark"] {
+            /* Dark theme values */
+            --bg-color: #0b0f19;
+            --card-bg: #111827;
+            --card-border: #1f2937;
+            --primary: #818cf8;
+            --primary-hover: #6366f1;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            
+            --critical-bg: rgba(239, 68, 68, 0.15);
+            --high-bg: rgba(249, 115, 22, 0.15);
+            --medium-bg: rgba(234, 179, 8, 0.15);
+            --low-bg: rgba(59, 130, 246, 0.15);
+            --info-bg: rgba(16, 185, 129, 0.15);
+            
+            --header-bg: linear-gradient(135deg, rgba(79, 70, 229, 0.16) 0%, rgba(192, 132, 252, 0.06) 100%);
+            --accordion-arrow-filter: invert(1);
+            --accordion-body-bg: rgba(0, 0, 0, 0.2);
+            --spotlight-color: rgba(79, 70, 229, 0.12);
+            --history-item-bg: rgba(255, 255, 255, 0.02);
+            --history-item-hover: rgba(255, 255, 255, 0.05);
+            --history-item-active: rgba(79, 70, 229, 0.15);
+            --btn-outline-hover-bg: rgba(255, 255, 255, 0.05);
+            --navbar-bg: #111827;
+            
+            /* Vibe additions */
+            --grid-line: rgba(129, 140, 248, 0.045);
+            --hover-shadow-color: rgba(129, 140, 248, 0.15);
+            --hover-border-color: rgba(129, 140, 248, 0.4);
+            --laser-color: #10b981;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            
+            /* Override Bootstrap 5 theme colors with our custom variables */
+            --bs-body-color: var(--text-main);
+            --bs-body-bg: var(--bg-color);
+            --bs-heading-color: var(--text-main);
+            --bs-secondary-color: var(--text-muted);
+            --bs-tertiary-color: var(--text-muted);
+            --bs-emphasis-color: var(--text-main);
+        }
+
+        /* Explicitly guarantee high contrast for headings and elements */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-main) !important;
+            transition: color 0.3s ease;
+        }
+
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        .card, .accordion-item {
+            color: var(--text-main) !important;
+        }
+
+        .navbar {
+            background-color: var(--navbar-bg) !important;
+            border-bottom: 1px solid var(--card-border) !important;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .dashboard-header {
+            background: var(--header-bg);
+            border-bottom: 1px solid var(--card-border);
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 12px 20px -3px var(--hover-shadow-color), 0 4px 6px -4px var(--hover-shadow-color);
+            border-color: var(--hover-border-color) !important;
+            transform: translateY(-3px);
+        }
+
+        /* Tactical blueprint grid background overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            background-size: 30px 30px;
+            background-image: 
+                linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+            z-index: 0;
+        }
+
+        /* Console laser scanning sweep */
+        .console-wrapper-relative {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .console-laser-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--laser-color), transparent);
+            box-shadow: 0 0 8px var(--laser-color), 0 0 15px var(--laser-color);
+            pointer-events: none;
+            z-index: 10;
+            animation: scan-laser 2.5s infinite linear;
+        }
+
+        @keyframes scan-laser {
+            0% { top: 0%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        .scan-history-item {
+            cursor: pointer;
+            border-left: 4px solid transparent;
+            transition: all 0.2s ease;
+            background-color: var(--history-item-bg);
+            margin-bottom: 0.5rem;
+        }
+
+        .scan-history-item:hover {
+            background-color: var(--history-item-hover);
+            transform: translateX(3px);
+        }
+
+        .scan-history-item.active {
+            border-left-color: var(--primary);
+            background-color: var(--history-item-active);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            font-weight: 500;
+            border-radius: 8px;
+            padding: 0.6rem 1.5rem;
+        }
+
+        .btn-primary:hover, .btn-primary:focus {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+            color: #ffffff;
+        }
+
+        .btn-outline-secondary {
+            border-color: var(--card-border);
+            color: var(--text-main);
+            border-radius: 8px;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: var(--btn-outline-hover-bg);
+            border-color: var(--card-border);
+            color: var(--text-main);
+        }
+
+        .form-control {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            border-radius: 8px;
+            padding: 0.6rem 1rem;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
+        .form-control:focus {
+            background-color: var(--card-bg);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15);
+            color: var(--text-main);
+        }
+
+        .badge-critical { background-color: var(--critical-bg); color: var(--critical); border: 1px solid rgba(239, 68, 68, 0.15); }
+        .badge-high { background-color: var(--high-bg); color: var(--high); border: 1px solid rgba(249, 115, 22, 0.15); }
+        .badge-medium { background-color: var(--medium-bg); color: var(--medium); border: 1px solid rgba(234, 179, 8, 0.15); }
+        .badge-low { background-color: var(--low-bg); color: var(--low); border: 1px solid rgba(59, 130, 246, 0.15); }
+        .badge-info { background-color: var(--info-bg); color: var(--info); border: 1px solid rgba(16, 185, 129, 0.15); }
+        .badge-safe { background-color: var(--info-bg); color: var(--info); border: 1px solid rgba(16, 185, 129, 0.15); }
+
+        .console-log {
+            background-color: #05070c;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: #10b981;
+            padding: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .score-display {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .score-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 8px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .nav-tabs {
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .nav-tabs .nav-link {
+            color: var(--text-muted);
+            border: none;
+            font-weight: 500;
+            padding: 0.8rem 1.2rem;
+        }
+
+        .nav-tabs .nav-link:hover {
+            color: var(--text-main);
+            border: none;
+        }
+
+        .nav-tabs .nav-link.active {
+            background-color: transparent;
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .accordion-item {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px !important;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .accordion-button {
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .accordion-button:not(.collapsed) {
+            background-color: rgba(79, 70, 229, 0.04);
+            color: var(--primary);
+            box-shadow: none;
+        }
+
+        .accordion-button::after {
+            filter: var(--accordion-arrow-filter);
+        }
+
+        .accordion-body {
+            background-color: var(--accordion-body-bg);
+            transition: background-color 0.3s ease;
+        }
+
+        .finding-section-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 0.3rem;
+            font-weight: 600;
+        }
+
+        .metric-card {
+            border-left: 4px solid var(--card-border);
+        }
+
+        .pulse-loader {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            animation: pulse 1.5s infinite;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.8); opacity: 0.5; }
+        }
+
+        /* Spotlight mouse move backdrop glow */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            background: radial-gradient(600px circle at var(--mouse-x, -1000px) var(--mouse-y, -1000px), var(--spotlight-color), transparent 80%);
+            z-index: 0;
+        }
+
+        .navbar, .dashboard-header, .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Fullscreen Particle Canvas Overlay */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fading Particle Trail Canvas -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom border-light-subtle py-3">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="fa-solid fa-shield-halved me-2"></i>WebGuard Scanner</a>
+            <div class="ms-auto d-flex align-items-center gap-3">
+                <a href="/" class="btn btn-outline-secondary px-3 py-2 d-flex align-items-center gap-2" style="border-radius: 8px; height: 38px; font-size: 0.9rem; font-weight: 500; text-decoration: none;">
+                    <i class="fa-solid fa-house"></i> Home
+                </a>
+                <button id="themeToggleBtn" class="btn btn-outline-secondary px-3 py-2" onclick="toggleTheme()" title="Toggle Dark/Light Mode" style="border-radius: 8px; width: 42px; height: 38px; display: flex; align-items: center; justify-content: center; padding: 0;">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2" id="systemStatusBadge"><i class="fa-solid fa-circle-check me-1"></i>[SYSTEM: ACTIVE]</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Banner -->
+    <div class="dashboard-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-7">
+                    <h1 class="fw-bold mb-1">Security Dashboard</h1>
+                    <p class="text-muted mb-0">Perform automated website vulnerability assessments and download professional PDF reports.</p>
+                </div>
+                <div class="col-md-5 mt-3 mt-md-0">
+                    <form id="scanForm" class="input-group">
+                        <input type="url" id="targetUrl" class="form-control" placeholder="https://example.com" required>
+                        <button class="btn btn-primary" type="submit" id="btnScan">
+                            <i class="fa-solid fa-circle-play me-2"></i>Run Scan
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container pb-5">
+        <div class="row">
+            
+            <!-- Scan History Sidebar (Left) -->
+            <div class="col-lg-4 col-md-5 mb-4">
+                <div class="card p-3 h-100">
+                    <h5 class="fw-bold mb-3"><i class="fa-solid fa-clock-rotate-left me-2 text-primary"></i>Scan History</h5>
+                    <div id="historyList" class="overflow-auto" style="max-height: 550px; min-height: 250px;">
+                        <!-- Populate History Items dynamically -->
+                        <div class="text-center py-5 text-muted">
+                            <i class="fa-solid fa-spinner fa-spin fa-2x mb-2"></i>
+                            <p class="mb-0">Loading scan history...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Content Area (Right) -->
+            <div class="col-lg-8 col-md-7">
+                
+                <!-- Live Console / Progress Logs -->
+                <div id="consoleWrapper" class="card p-3 mb-4 d-none console-wrapper-relative">
+                    <div class="console-laser-line"></div>
+                    <h6 class="fw-bold mb-2 text-muted"><i class="pulse-loader"></i>Scanning Progress</h6>
+                    <div id="consoleLog" class="console-log">
+                        [INFO] Awaiting target URL initialization...
+                    </div>
+                </div>
+
+                <!-- No Data State -->
+                <div id="emptyState" class="card p-5 text-center my-auto">
+                    <div class="py-5">
+                        <i class="fa-solid fa-shield-halved fa-4x text-primary mb-3 opacity-50"></i>
+                        <h4 class="fw-bold">No Scan Loaded</h4>
+                        <p class="text-muted mx-auto" style="max-width: 400px;">Enter a URL in the target address bar above to initiate a live security audit, or select an item from the scan history.</p>
+                    </div>
+                </div>
+
+                <!-- Scan Results Dashboard -->
+                <div id="scanDashboard" class="d-none">
+                    
+                    <!-- Core Summary Cards -->
+                    <div class="row mb-4">
+                        <div class="col-md-7 mb-3 mb-md-0">
+                            <div class="card p-4 h-100">
+                                <h6 class="text-uppercase text-muted fw-bold mb-2">Scan Information</h6>
+                                <h4 class="fw-bold text-truncate" id="reportUrl">https://example.com</h4>
+                                <div class="mt-3 text-muted small">
+                                    <div class="mb-1"><i class="fa-regular fa-calendar me-2"></i><span id="reportTime">July 3, 2026</span></div>
+                                    <div class="mb-1"><i class="fa-solid fa-server me-2"></i><span id="reportIp">192.168.1.1</span></div>
+                                    <div><i class="fa-solid fa-globe me-2"></i><span id="reportReachability">Reachable [HTTP 200]</span></div>
+                                </div>
+                                <div class="mt-4 pt-1 d-flex gap-2">
+                                    <button class="btn btn-primary btn-sm flex-fill" id="btnDownloadPdf">
+                                        <i class="fa-solid fa-file-pdf me-2"></i>PDF Report
+                                    </button>
+                                    <button class="btn btn-outline-secondary btn-sm flex-fill" id="btnExportJson">
+                                        <i class="fa-solid fa-file-code me-2"></i>Raw JSON
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="card p-4 h-100 text-center">
+                                <h6 class="text-uppercase text-muted fw-bold mb-3">Overall Security Rating</h6>
+                                <div class="score-circle mb-3">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <span class="score-display text-primary" id="reportScore">90</span>
+                                        <span class="small text-muted mt-1">out of 100</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <span class="badge px-3 py-2 fs-6 text-uppercase" id="reportRatingBadge">SAFE</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visual charts and metrics -->
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <div class="card p-3 h-100">
+                                <h6 class="fw-bold text-muted mb-3">Severity Breakdown</h6>
+                                <div style="position: relative; height: 180px; width: 100%;">
+                                    <canvas id="severityChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card p-3 h-100">
+                                <h6 class="fw-bold text-muted mb-3">Host Infrastructure Details</h6>
+                                <div class="small">
+                                    <div class="d-flex justify-content-between py-1 border-bottom border-secondary-subtle">
+                                        <span class="text-muted">SSL/TLS Scheme</span>
+                                        <span class="fw-semibold" id="hostSslScheme">N/A</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between py-1 border-bottom border-secondary-subtle">
+                                        <span class="text-muted">TLS Version</span>
+                                        <span class="fw-semibold" id="hostTlsVersion">N/A</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between py-1 border-bottom border-secondary-subtle">
+                                        <span class="text-muted">Cipher Suite</span>
+                                        <span class="fw-semibold text-truncate ms-3" style="max-width: 160px;" id="hostCipher">N/A</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between py-1 border-bottom border-secondary-subtle">
+                                        <span class="text-muted">Robots.txt</span>
+                                        <span class="fw-semibold" id="hostRobots">N/A</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between py-1">
+                                        <span class="text-muted">Server Header</span>
+                                        <span class="fw-semibold text-truncate ms-3" style="max-width: 160px;" id="hostServer">N/A</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Findings Accordion and Filter Tabs -->
+                    <div class="card p-3">
+                        <h5 class="fw-bold mb-3"><i class="fa-solid fa-bug text-danger me-2"></i>Vulnerabilities & Security Findings</h5>
+                        
+                        <!-- Filter Tabs -->
+                        <ul class="nav nav-tabs mb-3" id="severityTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="tab-all-tab" data-bs-toggle="tab" data-bs-target="#tab-all" type="button" role="tab" onclick="filterFindings('all')">
+                                    All <span class="badge bg-secondary ms-1" id="count-all">0</span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="tab-critical-tab" data-bs-toggle="tab" data-bs-target="#tab-critical" type="button" role="tab" onclick="filterFindings('critical')">
+                                    Critical <span class="badge bg-danger-subtle text-danger ms-1" id="count-critical">0</span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="tab-high-tab" data-bs-toggle="tab" data-bs-target="#tab-high" type="button" role="tab" onclick="filterFindings('high')">
+                                    High <span class="badge bg-warning-subtle text-warning ms-1" id="count-high">0</span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="tab-medium-tab" data-bs-toggle="tab" data-bs-target="#tab-medium" type="button" role="tab" onclick="filterFindings('medium')">
+                                    Medium <span class="badge bg-warning-subtle text-warning ms-1" id="count-medium">0</span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="tab-low-tab" data-bs-toggle="tab" data-bs-target="#tab-low" type="button" role="tab" onclick="filterFindings('low')">
+                                    Low <span class="badge bg-primary-subtle text-primary ms-1" id="count-low">0</span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="tab-info-tab" data-bs-toggle="tab" data-bs-target="#tab-info" type="button" role="tab" onclick="filterFindings('info')">
+                                    Info <span class="badge bg-success-subtle text-success ms-1" id="count-info">0</span>
+                                </button>
+                            </li>
+                        </ul>
+
+                        <!-- Accordion List -->
+                        <div class="accordion" id="findingsAccordion">
+                            <!-- Populate dynamically -->
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js for beautiful graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        let currentScanId = null;
+        let scanHistoryData = [];
+        let activeFindings = [];
+        let severityChartInstance = null;
+        let activeCounts = null;
+
+        // Theme Toggle Functions
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeButton(newTheme);
+            
+            // Redraw chart to update legend label colors and slice borders
+            if (activeCounts) {
+                renderSeverityChart(activeCounts);
+            }
+        }
+
+        function updateThemeButton(theme) {
+            const btn = document.getElementById('themeToggleBtn');
+            if (btn) {
+                if (theme === 'dark') {
+                    btn.innerHTML = `<i class="fa-solid fa-sun text-warning"></i>`;
+                    btn.title = "Switch to Light Mode";
+                } else {
+                    btn.innerHTML = `<i class="fa-solid fa-moon text-secondary"></i>`;
+                    btn.title = "Switch to Dark Mode";
+                }
+            }
+        }
+
+        // Initialize App
+        document.addEventListener("DOMContentLoaded", () => {
+            // Load saved theme (default to light)
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeButton(savedTheme);
+            
+            loadHistory();
+            
+            document.getElementById("scanForm").addEventListener("submit", (e) => {
+                e.preventDefault();
+                runScan();
+            });
+
+            document.getElementById("btnDownloadPdf").addEventListener("click", () => {
+                if (currentScanId) {
+                    window.open(`/api/scan/${currentScanId}/pdf`, "_blank");
+                }
+            });
+
+            document.getElementById("btnExportJson").addEventListener("click", () => {
+                if (currentScanId) {
+                    window.open(`/api/scan/${currentScanId}/json`, "_blank");
+                }
+            });
+
+            // Dynamic system health check ping
+            setInterval(async () => {
+                const badge = document.getElementById("systemStatusBadge");
+                if (!badge) return;
+                try {
+                    const res = await fetch("/api/history");
+                    if (res.ok) {
+                        badge.className = "badge bg-success-subtle text-success border border-success-subtle px-3 py-2";
+                        badge.innerHTML = `<i class="fa-solid fa-circle-check me-1"></i>[SYSTEM: ACTIVE]`;
+                    } else {
+                        throw new Error();
+                    }
+                } catch {
+                    badge.className = "badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2";
+                    badge.innerHTML = `<i class="fa-solid fa-triangle-exclamation me-1"></i>[SYSTEM: OFFLINE]`;
+                }
+            }, 10000);
+        });
+
+        // Load Scan History List
+        async function loadHistory() {
+            try {
+                const response = await fetch("/api/history");
+                const data = await response.json();
+                scanHistoryData = data;
+                
+                const historyList = document.getElementById("historyList");
+                historyList.innerHTML = "";
+                
+                if (data.length === 0) {
+                    historyList.innerHTML = `<div class="text-center py-5 text-muted"><p>No previous scans found</p></div>`;
+                    return;
+                }
+                
+                data.forEach(item => {
+                    const dt = new Date(item.timestamp);
+                    const formattedDate = dt.toLocaleDateString() + " " + dt.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    
+                    const ratingColor = getRiskRatingBadgeColor(item.risk_rating);
+                    const ratingClass = `badge-${item.risk_rating.toLowerCase()}`;
+                    
+                    const itemDiv = document.createElement("div");
+                    itemDiv.className = `p-3 rounded scan-history-item border-bottom border-secondary-subtle d-flex justify-content-between align-items-center ${currentScanId === item.id ? 'active' : ''}`;
+                    itemDiv.onclick = () => selectHistoryItem(item.id);
+                    itemDiv.innerHTML = `
+                        <div class="text-truncate me-2" style="max-width: 70%;">
+                            <div class="fw-semibold text-truncate" style="font-size: 0.95rem;">${item.url}</div>
+                            <div class="small text-muted" style="font-size: 0.75rem;">${formattedDate}</div>
+                        </div>
+                        <div class="text-end">
+                            <span class="badge ${ratingClass} text-uppercase px-2 py-1 mb-1" style="font-size: 0.7rem;">${item.risk_rating}</span>
+                            <div class="small fw-bold text-primary" style="font-size: 0.85rem;">Score: ${item.security_score}</div>
+                        </div>
+                    `;
+                    historyList.appendChild(itemDiv);
+                });
+            } catch (err) {
+                console.error("Error loading history:", err);
+                document.getElementById("historyList").innerHTML = `<div class="text-center py-5 text-danger"><p>Failed to load history</p></div>`;
+            }
+        }
+
+        // Click History Item
+        async function selectHistoryItem(id) {
+            currentScanId = id;
+            
+            // Mark active sidebar
+            const items = document.querySelectorAll(".scan-history-item");
+            items.forEach(el => el.classList.remove("active"));
+            
+            // Reload list to ensure active highlight remains
+            loadHistory();
+            
+            // Hide empty state and show dashboard
+            document.getElementById("emptyState").classList.add("d-none");
+            document.getElementById("scanDashboard").classList.remove("d-none");
+            document.getElementById("consoleWrapper").classList.add("d-none");
+            
+            // Fetch Details
+            try {
+                const response = await fetch(`/api/scan/${id}`);
+                if (!response.ok) throw new Error("Failed to load details");
+                const report = await response.json();
+                populateDashboard(report);
+            } catch (err) {
+                console.error(err);
+                alert("Error loading scan details");
+            }
+        }
+
+        // Trigger New Scan
+        async function runScan() {
+            const urlInput = document.getElementById("targetUrl");
+            const url = urlInput.value.trim();
+            if (!url) return;
+            
+            // Show console progress logs
+            document.getElementById("emptyState").classList.add("d-none");
+            document.getElementById("scanDashboard").classList.add("d-none");
+            
+            const consoleWrapper = document.getElementById("consoleWrapper");
+            const consoleLog = document.getElementById("consoleLog");
+            consoleWrapper.classList.remove("d-none");
+            
+            // Set buttons state
+            const btnScan = document.getElementById("btnScan");
+            btnScan.disabled = true;
+            btnScan.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-2"></i>Scanning...`;
+            
+            consoleLog.innerHTML = "";
+            writeLog("[INFO] Resolving domain name and checking reachability...");
+            
+            let logTimer1 = setTimeout(() => writeLog("[INFO] Initializing WebGuard Unified Scanner Engine..."), 800);
+            let logTimer2 = setTimeout(() => writeLog("[INFO] Phase 1: Analysing HTTP Response Headers for security flags..."), 1500);
+            let logTimer3 = setTimeout(() => writeLog("[INFO] Phase 2: Probing SSL/TLS certificate chain & security attributes..."), 2500);
+            let logTimer4 = setTimeout(() => writeLog("[INFO] Phase 3: Inspecting cookie security settings (HttpOnly, Secure)..."), 3800);
+            let logTimer5 = setTimeout(() => writeLog("[INFO] Phase 4: Reading robots.txt configurations and scanning HTTP Methods..."), 5000);
+            let logTimer6 = setTimeout(() => writeLog("[INFO] Phase 5: Detecting exposure of sensitive files (.env, .git, backups)..."), 6200);
+            let logTimer7 = setTimeout(() => writeLog("[INFO] Compiling final report metrics & calculating risk vectors..."), 7500);
+            
+            try {
+                const response = await fetch(`/api/scan?url=${encodeURIComponent(url)}`, {
+                    method: "POST"
+                });
+                
+                // Clear simulated timers
+                clearTimeout(logTimer1);
+                clearTimeout(logTimer2);
+                clearTimeout(logTimer3);
+                clearTimeout(logTimer4);
+                clearTimeout(logTimer5);
+                clearTimeout(logTimer6);
+                clearTimeout(logTimer7);
+                
+                if (!response.ok) {
+                    throw new Error("Scan API returned error");
+                }
+                
+                const report = await response.json();
+                
+                if (report.status === "Invalid" || report.status === "Blocked" || report.status === "DNS Failure") {
+                    writeLog(`[ERROR] Scan stopped. URL is unsafe, blocked by SSRF filters, or host could not be resolved. Details: ${report.error || 'Check failed'}`);
+                    btnScan.disabled = false;
+                    btnScan.innerHTML = `<i class="fa-solid fa-circle-play me-2"></i>Run Scan`;
+                    return;
+                }
+                
+                if (report.reachable === false) {
+                    writeLog(`[ERROR] Target website is unreachable or returned client/server errors. Verify connection and try again.`);
+                    btnScan.disabled = false;
+                    btnScan.innerHTML = `<i class="fa-solid fa-circle-play me-2"></i>Run Scan`;
+                    return;
+                }
+                
+                writeLog("[SUCCESS] Scanner Engine finished. Recording metrics in database.");
+                currentScanId = report.id;
+                
+                setTimeout(() => {
+                    consoleWrapper.classList.add("d-none");
+                    document.getElementById("scanDashboard").classList.remove("d-none");
+                    populateDashboard(report);
+                    loadHistory();
+                    btnScan.disabled = false;
+                    btnScan.innerHTML = `<i class="fa-solid fa-circle-play me-2"></i>Run Scan`;
+                }, 1000);
+                
+            } catch (err) {
+                console.error("Scan failed:", err);
+                writeLog(`[CRITICAL] Scanning engine crashed or timed out: ${err.message}`);
+                btnScan.disabled = false;
+                btnScan.innerHTML = `<i class="fa-solid fa-circle-play me-2"></i>Run Scan`;
+            }
+        }
+
+        // Helper to write console logs
+        function writeLog(text) {
+            const consoleLog = document.getElementById("consoleLog");
+            const time = new Date().toLocaleTimeString();
+            consoleLog.innerHTML += `[${time}] ${text}\n`;
+            consoleLog.scrollTop = consoleLog.scrollHeight;
+        }
+
+        // Populate Dashboard UI Elements
+        function populateDashboard(report) {
+            document.getElementById("reportUrl").innerText = report.url;
+            
+            // Format timestamp
+            const dt = new Date(report.timestamp);
+            document.getElementById("reportTime").innerText = dt.toLocaleDateString() + " " + dt.toLocaleTimeString();
+            
+            const targetDetails = report.target_details || {};
+            const dns = targetDetails.dns || {};
+            const reach = targetDetails.reachability || {};
+            const trans = targetDetails.transport_security || {};
+            const ssl = report.ssl_tls || {};
+            
+            document.getElementById("reportIp").innerText = dns.ip_address || "N/A";
+            document.getElementById("reportReachability").innerText = `Reachable [HTTP ${reach.status_code || 'N/A'}]`;
+            
+            // Score and Rating
+            const score = report.security_score !== undefined ? report.security_score : 100;
+            const rating = report.risk_rating || "Safe";
+            
+            document.getElementById("reportScore").innerText = score;
+            
+            const ratingBadge = document.getElementById("reportRatingBadge");
+            ratingBadge.className = "badge px-3 py-2 fs-6 text-uppercase " + getRatingBadgeClass(rating);
+            ratingBadge.innerText = rating;
+            
+            // Infrastructure card
+            document.getElementById("hostSslScheme").innerText = trans.is_https ? "HTTPS" : "HTTP Only";
+            document.getElementById("hostTlsVersion").innerText = ssl.version || "N/A";
+            document.getElementById("hostCipher").innerText = ssl.cipher_suite || "N/A";
+            document.getElementById("hostCipher").title = ssl.cipher_suite || "N/A";
+            document.getElementById("hostRobots").innerText = report.robots_txt && report.robots_txt.present ? "Present" : "Not Found";
+            document.getElementById("hostServer").innerText = reach.server_header || "Not Disclosed";
+            document.getElementById("hostServer").title = reach.server_header || "Not Disclosed";
+            
+            // Count Badges
+            const counts = report.severity_counts || {critical:0, high:0, medium:0, low:0, info:0};
+            document.getElementById("count-all").innerText = report.total_findings || 0;
+            document.getElementById("count-critical").innerText = counts.critical || 0;
+            document.getElementById("count-high").innerText = counts.high || 0;
+            document.getElementById("count-medium").innerText = counts.medium || 0;
+            document.getElementById("count-low").innerText = counts.low || 0;
+            document.getElementById("count-info").innerText = counts.info || 0;
+            
+            // Update Findings
+            activeFindings = report.findings || [];
+            
+            // Reset filters to 'all' tab
+            const triggerEl = document.querySelector('#severityTabs button[data-bs-target="#tab-all"]');
+            bootstrap.Tab.getOrCreateInstance(triggerEl).show();
+            filterFindings('all');
+            
+            // Render Chart
+            activeCounts = counts;
+            renderSeverityChart(counts);
+        }
+
+        // Render doughnut chart for severities
+        function renderSeverityChart(counts) {
+            const ctx = document.getElementById('severityChart').getContext('2d');
+            
+            if (severityChartInstance) {
+                severityChartInstance.destroy();
+            }
+            
+            const dataValues = [
+                counts.critical || 0,
+                counts.high || 0,
+                counts.medium || 0,
+                counts.low || 0,
+                counts.info || 0
+            ];
+            
+            // If total findings is 0, render a clean green chart
+            const total = dataValues.reduce((a, b) => a + b, 0);
+            
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const borderCol = isDark ? '#111827' : '#ffffff';
+            const legendCol = isDark ? '#f3f4f6' : '#0f172a';
+            
+            const chartData = {
+                labels: ['Critical', 'High', 'Medium', 'Low', 'Info'],
+                datasets: [{
+                    data: total === 0 ? [1] : dataValues,
+                    backgroundColor: total === 0 ? ['#10b981'] : ['#ef4444', '#f97316', '#eab308', '#3b82f6', '#10b981'],
+                    borderColor: borderCol,
+                    borderWidth: 2,
+                    hoverOffset: 4
+                }]
+            };
+
+            severityChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                color: legendCol,
+                                font: {
+                                    family: 'Inter'
+                                }
+                            }
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+        }
+
+        // Filter and display findings in accordion
+        function filterFindings(severity) {
+            const container = document.getElementById("findingsAccordion");
+            container.innerHTML = "";
+            
+            const filtered = severity === 'all' 
+                ? activeFindings 
+                : activeFindings.filter(f => f.severity.toLowerCase() === severity.toLowerCase());
+                
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-4 text-muted">
+                        <i class="fa-solid fa-circle-check text-success fa-2x mb-2"></i>
+                        <p class="mb-0">No findings detected for this severity category</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sort by severity priority: Critical -> High -> Medium -> Low -> Info
+            const sevPriority = {critical: 0, high: 1, medium: 2, low: 3, info: 4};
+            const sorted = [...filtered].sort((a, b) => sevPriority[a.severity.toLowerCase()] - sevPriority[b.severity.toLowerCase()]);
+            
+            sorted.forEach((finding, index) => {
+                const badgeClass = `badge-${finding.severity.toLowerCase()}`;
+                const collapsesId = `collapse-finding-${index}`;
+                const headingId = `heading-finding-${index}`;
+                
+                const card = document.createElement("div");
+                card.className = "accordion-item";
+                card.innerHTML = `
+                    <h2 class="accordion-header" id="${headingId}">
+                        <button class="accordion-button collapsed d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#${collapsesId}" aria-expanded="false" aria-controls="${collapsesId}">
+                            <div class="text-truncate me-2" style="max-width: 80%;">
+                                <i class="fa-solid fa-triangle-exclamation text-warning me-2"></i>
+                                <span>${finding.check}</span>
+                            </div>
+                            <span class="badge ${badgeClass} text-uppercase px-2 py-1 me-3" style="font-size: 0.75rem;">${finding.severity}</span>
+                        </button>
+                    </h2>
+                    <div id="${collapsesId}" class="accordion-collapse collapse" aria-labelledby="${headingId}" data-bs-parent="#findingsAccordion">
+                        <div class="accordion-body">
+                            <div class="mb-3">
+                                <div class="finding-section-title">Description</div>
+                                <p class="mb-0 text-muted small" style="line-height: 1.5;">${finding.description || 'No description provided.'}</p>
+                            </div>
+                            ${finding.recommendation ? `
+                            <div class="mb-3">
+                                <div class="finding-section-title">Remediation Recommendation</div>
+                                <p class="mb-0 text-muted small" style="line-height: 1.5;">${finding.recommendation}</p>
+                            </div>
+                            ` : ''}
+                            ${finding.details ? `
+                            <div>
+                                <div class="finding-section-title">Technical Details / Evidence</div>
+                                <pre class="bg-dark text-info p-2 rounded small mt-1 mb-0" style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; overflow-x: auto;">${finding.details}</pre>
+                            </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Helper classes mappings
+        function getRiskRatingBadgeColor(rating) {
+            switch(rating.toLowerCase()) {
+                case 'critical': return '#ef4444';
+                case 'high': return '#f97316';
+                case 'medium': return '#eab308';
+                case 'low': return '#3b82f6';
+                case 'safe': return '#10b981';
+                default: return '#9ca3af';
+            }
+        }
+        
+        function getRatingBadgeClass(rating) {
+            switch(rating.toLowerCase()) {
+                case 'critical': return 'badge-critical';
+                case 'high': return 'badge-high';
+                case 'medium': return 'badge-medium';
+                case 'low': return 'badge-low';
+                case 'safe': return 'badge-safe';
+                default: return 'bg-secondary';
+            }
+        }
+
+        // Binary Particle Trail Canvas Implementation
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas?.getContext('2d');
+        
+        let mouseX = -1000;
+        let mouseY = -1000;
+        const particles = [];
+
+        function resizeCanvas() {
+            if (canvas) {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Global mouse movement listener
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            // Update body spotlight gradient coordinates
+            document.body.style.setProperty('--mouse-x', `${mouseX}px`);
+            document.body.style.setProperty('--mouse-y', `${mouseY}px`);
+            
+            // Spawn a binary particle (0 or 1) on movement
+            spawnBinaryParticle(mouseX, mouseY);
+        });
+
+        function spawnBinaryParticle(x, y) {
+            // Matrix/Hacking falling code drift:
+            // Slow downward drift, slight lateral spread
+            const vx = (Math.random() - 0.5) * 0.4;
+            const vy = 0.6 + Math.random() * 0.8;
+            
+            // Expanded cyber security hacking-style character array
+            const cyberChars = ['0', '1', '{', '}', ';', '<', '>', '#', '$', '&', '[', ']', '*', '+', '%', '?', '!', '/'];
+            const character = cyberChars[Math.floor(Math.random() * cyberChars.length)];
+            
+            particles.push({
+                x: x + (Math.random() - 0.5) * 10, // slight offset from cursor center
+                y: y + (Math.random() - 0.5) * 10,
+                vx: vx,
+                vy: vy,
+                text: character,
+                size: 11 + Math.random() * 6, // dynamic font size
+                alpha: 1.0,
+                decay: 0.02 + Math.random() * 0.015 // fade duration
+            });
+        }
+
+        function animateBinaryParticles() {
+            if (!ctx || !canvas) return;
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            
+            // Determine active color based on theme:
+            // Dark Mode -> Green (hacker style)
+            // Light Mode -> Orange (security alert style)
+            const colorPrefix = isDark ? 'rgba(34, 197, 94, ' : 'rgba(249, 115, 22, ';
+            
+            // Draw all active binary particles
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                
+                // Apply velocity vectors
+                p.x += p.vx;
+                p.y += p.vy;
+                p.alpha -= p.decay;
+                
+                if (p.alpha <= 0) {
+                    particles.splice(i, 1);
+                    continue;
+                }
+                
+                // Draw text in digital format
+                ctx.beginPath();
+                ctx.font = `bold ${p.size}px "Courier New", Courier, monospace`;
+                ctx.fillStyle = colorPrefix + p.alpha + ')';
+                
+                // Glow effect for cathode-ray tube simulation
+                ctx.shadowBlur = 4;
+                ctx.shadowColor = colorPrefix + '0.4)';
+                
+                ctx.fillText(p.text, p.x, p.y);
+                
+                // Reset shadow values for next draw performance
+                ctx.shadowBlur = 0;
+            }
+            
+            requestAnimationFrame(animateBinaryParticles);
+        }
+        
+        // Start animation loop
+        requestAnimationFrame(animateBinaryParticles);
+    </script>
+</body>
+</html>

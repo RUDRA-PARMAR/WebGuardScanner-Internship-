@@ -1,0 +1,22 @@
+# SQLite database
+*.db
+
+# Python bytecode and virtual envs
+__pycache__/
+*.pyc
+venv/
+.venv/
+.env
+
+# Exclude documentation portion
+WebGuard_Internship_6_Week_Plan.pdf
+WebGuard_Week1_Documentation.docx
+WebGuard_Week2_Documentation.docx
+WebGuard_Week3_Documentation.docx
+WebGuard_Week4_Documentation.docx
+
+# Exclude test and generate week portion
+test_week4.py
+test_week5.py
+generate_week3_doc.py
+generate_week4_doc.py

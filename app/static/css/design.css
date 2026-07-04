@@ -1,0 +1,77 @@
+/* Design System for WebGuard Scanner */
+:root {
+    /* Light theme variables */
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --card-border: #e2e8f0;
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --critical: #ef4444;
+    --high: #f97316;
+    --medium: #eab308;
+    --low: #3b82f6;
+    --info: #10b981;
+    --critical-bg: rgba(239, 68, 68, 0.08);
+    --high-bg: rgba(249, 115, 22, 0.08);
+    --medium-bg: rgba(234, 179, 8, 0.08);
+    --low-bg: rgba(59, 130, 246, 0.08);
+    --info-bg: rgba(16, 185, 129, 0.08);
+    --header-bg: linear-gradient(135deg, rgba(79, 70, 229, 0.06) 0%, rgba(192, 132, 252, 0.02) 100%);
+    --accordion-arrow-filter: none;
+    --accordion-body-bg: rgba(0, 0, 0, 0.02);
+    --spotlight-color: rgba(79, 70, 229, 0.06);
+    --history-item-bg: rgba(0, 0, 0, 0.02);
+    --history-item-hover: rgba(0, 0, 0, 0.04);
+    --history-item-active: rgba(79, 70, 229, 0.08);
+    --btn-outline-hover-bg: rgba(0, 0, 0, 0.03);
+    --navbar-bg: #ffffff;
+}
+[data-theme="dark"] {
+    --bg-color: #0b0f19;
+    --card-bg: #111827;
+    --card-border: #1f2937;
+    --primary: #818cf8;
+    --primary-hover: #6366f1;
+    --text-main: #f3f4f6;
+    --text-muted: #9ca3af;
+    --critical-bg: rgba(239, 68, 68, 0.15);
+    --high-bg: rgba(249, 115, 22, 0.15);
+    --medium-bg: rgba(234, 179, 8, 0.15);
+    --low-bg: rgba(59, 130, 246, 0.15);
+    --info-bg: rgba(16, 185, 129, 0.15);
+    --header-bg: linear-gradient(135deg, rgba(79, 70, 229, 0.16) 0%, rgba(192, 132, 252, 0.06) 100%);
+    --accordion-arrow-filter: invert(1);
+    --accordion-body-bg: rgba(0, 0, 0, 0.2);
+    --spotlight-color: rgba(79, 70, 229, 0.12);
+    --history-item-bg: rgba(255, 255, 255, 0.02);
+    --history-item-hover: rgba(255, 255, 255, 0.05);
+    --history-item-active: rgba(79, 70, 229, 0.15);
+    --btn-outline-hover-bg: rgba(255, 255, 255, 0.05);
+    --navbar-bg: #111827;
+}
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+/* Component styles */
+.card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03), 0 2px 4px -1px rgba(0,0,0,0.02);
+    transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), box-shadow 0.25s cubic-bezier(0.4,0,0.2,1), background-color 0.3s ease, border-color 0.3s ease;
+}
+.card:hover {
+    box-shadow: 0 12px 20px -3px var(--hover-shadow-color), 0 4px 6px -4px var(--hover-shadow-color);
+    border-color: var(--hover-border-color) !important;
+    transform: translateY(-3px);
+}
+.navbar {background-color: var(--navbar-bg) !important; border-bottom: 1px solid var(--card-border) !important; transition: background-color 0.3s ease, border-color 0.3s ease;}
+.btn-primary {background-color: var(--primary); border-color: var(--primary); font-weight: 500; border-radius: 8px; padding: 0.6rem 1.5rem;}
+.btn-primary:hover, .btn-primary:focus {background-color: var(--primary-hover); border-color: var(--primary-hover); color: #ffffff;}
+html {scroll-behavior: smooth;}

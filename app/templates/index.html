@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGuard Scanner — AI-Powered Website Security Auditing</title>
+    <meta name="description"
+        content="WebGuard Scanner is an advanced, automated website vulnerability assessment platform. Identify misconfigurations, weak headers, SSL flaws, and sensitive data exposures in seconds.">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* ============================================
+           DARK THEME (Default)
+           ============================================ */
+        :root {
+            --bg-deep: #030712;
+            --bg-card: rgba(17, 24, 39, 0.6);
+            --bg-card-border: rgba(55, 65, 81, 0.5);
+            --bg-nav: rgba(3, 7, 18, 0.7);
+            --bg-terminal: rgba(17, 24, 39, 0.8);
+            --bg-terminal-header: rgba(31, 41, 55, 0.8);
+            --bg-cta: linear-gradient(135deg, rgba(79, 70, 229, 0.12), rgba(124, 58, 237, 0.06));
+            --bg-cta-border: rgba(129, 140, 248, 0.15);
+            --primary: #818cf8;
+            --primary-glow: rgba(129, 140, 248, 0.15);
+            --accent-green: #10b981;
+            --accent-orange: #f97316;
+            --accent-red: #ef4444;
+            --accent-blue: #3b82f6;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --text-step-desc: #cbd5e1;
+            --grid-line: rgba(129, 140, 248, 0.03);
+            --footer-border: rgba(55, 65, 81, 0.3);
+            --pill-bg: rgba(129, 140, 248, 0.08);
+            --pill-border: rgba(129, 140, 248, 0.15);
+            --pill-hover-bg: rgba(129, 140, 248, 0.2);
+            --pill-hover-border: rgba(129, 140, 248, 0.45);
+            --pill-hover-color: #a5b4fc;
+            --matrix-bg-clear: rgba(3, 7, 18, 0.06);
+            --matrix-char-color: rgba(16, 185, 129, 0.25);
+            --toggle-icon: "\f186";
+            /* moon */
+        }
+
+        /* ============================================
+           LIGHT THEME
+           ============================================ */
+        [data-theme="light"] {
+            --bg-deep: #f8fafc;
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --bg-card-border: rgba(203, 213, 225, 0.6);
+            --bg-nav: rgba(248, 250, 252, 0.85);
+            --bg-terminal: rgba(241, 245, 249, 0.95);
+            --bg-terminal-header: rgba(226, 232, 240, 0.9);
+            --bg-cta: linear-gradient(135deg, rgba(79, 70, 229, 0.06), rgba(124, 58, 237, 0.03));
+            --bg-cta-border: rgba(129, 140, 248, 0.2);
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.1);
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --text-step-desc: #64748b;
+            --grid-line: rgba(99, 102, 241, 0.04);
+            --footer-border: rgba(203, 213, 225, 0.5);
+            --pill-bg: rgba(99, 102, 241, 0.06);
+            --pill-border: rgba(99, 102, 241, 0.18);
+            --pill-hover-bg: rgba(99, 102, 241, 0.14);
+            --pill-hover-border: rgba(99, 102, 241, 0.4);
+            --pill-hover-color: #4f46e5;
+            --matrix-bg-clear: rgba(248, 250, 252, 0.08);
+            --matrix-char-color: rgba(99, 102, 241, 0.12);
+        }
+
+        [data-theme="light"] .orb-1 {
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.06), transparent 70%);
+        }
+
+        [data-theme="light"] .orb-2 {
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.04), transparent 70%);
+        }
+
+        [data-theme="light"] .orb-3 {
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.03), transparent 70%);
+        }
+
+        [data-theme="light"] #matrixCanvas {
+            opacity: 0.35;
+        }
+
+        [data-theme="light"] .terminal-body {
+            color: #059669;
+        }
+
+        [data-theme="light"] .terminal-body .ok {
+            color: #059669;
+        }
+
+        [data-theme="light"] .terminal-body .info {
+            color: #2563eb;
+        }
+
+        [data-theme="light"] .terminal-body .warn {
+            color: #d97706;
+        }
+
+        [data-theme="light"] .terminal-body .fail {
+            color: #dc2626;
+        }
+
+        [data-theme="light"] .terminal-body .prompt {
+            color: #6366f1;
+        }
+
+        [data-theme="light"] .feature-card:hover {
+            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.08);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        [data-theme="light"] .nav-container {
+            border-bottom-color: rgba(203, 213, 225, 0.5);
+        }
+
+        [data-theme="light"] .stat-number {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        /* Tactical blueprint grid */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            background-size: 32px 32px;
+            background-image:
+                linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+            z-index: 0;
+        }
+
+        /* Animated radial gradient orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            animation: float 8s ease-in-out infinite;
+            transition: background 0.4s ease;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(129, 140, 248, 0.12), transparent 70%);
+            top: -100px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.08), transparent 70%);
+            bottom: -50px;
+            left: -80px;
+            animation-delay: -3s;
+        }
+
+        .orb-3 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.06), transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px) scale(1);
+            }
+
+            50% {
+                transform: translateY(-25px) scale(1.05);
+            }
+        }
+
+        /* Canvas overlays */
+        #matrixCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.65;
+            transition: opacity 0.4s ease;
+        }
+
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            display: block;
+        }
+
+        /* Z-index layering */
+        .content-layer {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Navigation */
+        .nav-container {
+            padding: 1.2rem 0;
+            backdrop-filter: blur(12px);
+            background: var(--bg-nav);
+            border-bottom: 1px solid var(--footer-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: background 0.4s ease, border-color 0.4s ease;
+        }
+
+        .nav-brand {
+            font-weight: 800;
+            font-size: 1.5rem;
+            text-decoration: none;
+            background: linear-gradient(135deg, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-link-custom {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+            padding: 0.4rem 0;
+        }
+
+        .nav-link-custom:hover {
+            color: var(--text-main);
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle-btn {
+            background: transparent;
+            border: 1px solid var(--bg-card-border);
+            color: var(--text-muted);
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle-btn:hover {
+            background: var(--primary-glow);
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: rotate(15deg);
+        }
+
+        .btn-cta {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: #fff;
+            border: none;
+            padding: 0.65rem 1.8rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.35);
+            color: #fff;
+        }
+
+        .btn-outline-glow {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid rgba(129, 140, 248, 0.3);
+            padding: 0.65rem 1.8rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-outline-glow:hover {
+            background: rgba(129, 140, 248, 0.08);
+            border-color: rgba(129, 140, 248, 0.5);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            min-height: calc(100vh - 70px);
+            display: flex;
+            align-items: center;
+            padding: 4rem 0;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: var(--accent-green);
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease;
+            color: var(--text-main);
+        }
+
+        .hero-title .gradient-text {
+            background: linear-gradient(135deg, #818cf8 0%, #c084fc 40%, #f472b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+            max-width: 540px;
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 0.8s ease 0.1s both;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        /* Terminal Preview */
+        .terminal-card {
+            background: var(--bg-terminal);
+            border: 1px solid var(--bg-card-border);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(129, 140, 248, 0.05);
+            animation: fadeInRight 1s ease 0.3s both;
+            transition: background 0.4s ease, border-color 0.4s ease;
+        }
+
+        .terminal-header {
+            background: var(--bg-terminal-header);
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid var(--bg-card-border);
+            transition: background 0.4s ease;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.red {
+            background: #ef4444;
+        }
+
+        .terminal-dot.yellow {
+            background: #eab308;
+        }
+
+        .terminal-dot.green {
+            background: #10b981;
+        }
+
+        .terminal-title {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-left: 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .terminal-body {
+            padding: 1.2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            line-height: 1.7;
+            color: var(--accent-green);
+            min-height: 220px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .terminal-body .line {
+            opacity: 0;
+            animation: typeLine 0.3s ease forwards;
+        }
+
+        .terminal-body .prompt {
+            color: var(--primary);
+        }
+
+        .terminal-body .flag {
+            color: var(--accent-orange);
+        }
+
+        .terminal-body .url-text {
+            color: #f472b6;
+        }
+
+        .terminal-body .ok {
+            color: var(--accent-green);
+        }
+
+        .terminal-body .warn {
+            color: var(--accent-orange);
+        }
+
+        .terminal-body .fail {
+            color: var(--accent-red);
+        }
+
+        .terminal-body .info {
+            color: var(--accent-blue);
+        }
+
+        @keyframes typeLine {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Features Section */
+        .section-heading {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .section-title {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+
+        .section-subtitle {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--bg-card-border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s, border-color 0.3s, background 0.4s;
+            height: 100%;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 35px rgba(129, 140, 248, 0.1);
+            border-color: rgba(129, 140, 248, 0.3);
+        }
+
+        .feature-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .feature-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+            color: var(--text-main);
+        }
+
+        .feature-desc {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Stats Section */
+        .stat-card {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        .stat-number {
+            font-size: 2.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* How It Works */
+        .step-number {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .step-title {
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            color: var(--text-main);
+        }
+
+        .step-desc {
+            font-size: 0.92rem;
+            color: var(--text-step-desc);
+            margin-bottom: 0;
+            line-height: 1.5;
+        }
+
+        .step-connector {
+            width: 2px;
+            height: 40px;
+            background: linear-gradient(to bottom, rgba(129, 140, 248, 0.4), transparent);
+            margin: 0.3rem 0 0.3rem 21px;
+        }
+
+        /* Tech Stack Pills — each pill carries --pill-c (brand color) and --pill-g (glow) */
+        .tech-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            background: var(--pill-bg);
+            border: 1px solid var(--pill-border);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: default;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tech-pill:hover {
+            color: var(--pill-c);
+            border-color: var(--pill-c);
+            background: var(--pill-g);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 22px var(--pill-g);
+        }
+
+        .tech-pill i {
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .tech-pill:hover i {
+            transform: rotate(10deg) scale(1.2);
+            color: var(--pill-c);
+        }
+
+        /* CTA Box */
+        .cta-box {
+            background: var(--bg-cta);
+            border: 1px solid var(--bg-cta-border);
+            border-radius: 20px;
+            transition: background 0.4s ease, border-color 0.4s ease;
+        }
+
+        .cta-title {
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 2rem;
+        }
+
+        .cta-desc {
+            color: var(--text-muted);
+        }
+
+        /* Footer */
+        .footer {
+            border-top: 1px solid var(--footer-border);
+            padding: 3rem 0 2rem;
+            margin-top: 5rem;
+            transition: border-color 0.4s ease;
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Scroll-triggered reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-section {
+                min-height: auto;
+                padding: 3rem 0;
+            }
+
+            .terminal-card {
+                margin-top: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Ambient Orbs -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <!-- Matrix Rain Canvas -->
+    <canvas id="matrixCanvas"></canvas>
+
+    <!-- Binary Trail Mouse Effect Canvas -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Content Layer -->
+    <div class="content-layer">
+
+        <!-- Navigation -->
+        <nav class="nav-container">
+            <div class="container d-flex align-items-center justify-content-between">
+                <a class="nav-brand" href="/">
+                    <i class="fa-solid fa-shield-halved me-2"></i>WebGuard
+                </a>
+                <div class="d-flex align-items-center gap-3">
+                    <a href="#features" class="nav-link-custom d-none d-md-inline">Features</a>
+                    <a href="#how-it-works" class="nav-link-custom d-none d-md-inline">How It Works</a>
+                    <a href="#tech" class="nav-link-custom d-none d-md-inline">Tech Stack</a>
+                    <button id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleTheme()"
+                        title="Toggle Dark/Light Mode">
+                        <i class="fa-solid fa-moon" id="themeIcon"></i>
+                    </button>
+                    <a href="/dashboard" class="btn-cta">
+                        <i class="fa-solid fa-rocket"></i> Launch Scanner
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 mb-5 mb-lg-0">
+                        <div class="hero-badge">
+                            <i class="fa-solid fa-circle-check"></i>
+                            Open-Source Security Tool
+                        </div>
+                        <h1 class="hero-title">
+                            Scan. Detect.<br>
+                            <span class="gradient-text">Secure Everything.</span>
+                        </h1>
+                        <p class="hero-subtitle">
+                            WebGuard Scanner is an automated website vulnerability assessment platform.
+                            Identify misconfigurations, weak security headers, SSL/TLS flaws, exposed
+                            sensitive files, and cookie vulnerabilities — all in seconds.
+                        </p>
+                        <div class="hero-buttons">
+                            <a href="/dashboard" class="btn-cta">
+                                <i class="fa-solid fa-shield-halved"></i> Start Scanning
+                            </a>
+                            <a href="#features" class="btn-outline-glow">
+                                <i class="fa-solid fa-bolt"></i> Explore Features
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="terminal-card">
+                            <div class="terminal-header">
+                                <div class="terminal-dot red"></div>
+                                <div class="terminal-dot yellow"></div>
+                                <div class="terminal-dot green"></div>
+                                <span class="terminal-title">webguard-cli — scanning</span>
+                            </div>
+                            <div class="terminal-body" id="terminalBody">
+                                <!-- Lines injected by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="py-4 reveal">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-number" data-target="9">0</div>
+                            <div class="stat-label">Security Checks</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-number" data-target="30">0</div>
+                            <div class="stat-label">Header Analysers</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-number" data-target="100">0</div>
+                            <div class="stat-label">Scoring Metrics</div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-number" data-target="5">0</div>
+                            <div class="stat-label">Severity Levels</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="py-5 mt-4" id="features">
+            <div class="container">
+                <div class="text-center mb-5 reveal">
+                    <div class="section-heading">Capabilities</div>
+                    <h2 class="section-title">Enterprise-Grade Security Checks</h2>
+                    <p class="section-subtitle mx-auto">Our scanner performs comprehensive vulnerability assessments
+                        across multiple attack surfaces to protect your web infrastructure.</p>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-4 reveal">
+                        <div class="feature-card">
+                            <div class="feature-icon" style="background: rgba(129, 140, 248, 0.12); color: #818cf8;">
+                                <i class="fa-solid fa-lock"></i>
+                            </div>
+                            <h5 class="feature-title">SSL/TLS Analysis</h5>
+                            <p class="feature-desc">Deep inspection of SSL certificates, TLS versions, cipher suites,
+                                and HSTS enforcement to ensure encrypted communications.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 reveal">
+                        <div class="feature-card">
+                            <div class="feature-icon" style="background: rgba(249, 115, 22, 0.12); color: #f97316;">
+                                <i class="fa-solid fa-helmet-safety"></i>
+                            </div>
+                            <h5 class="feature-title">Security Headers</h5>
+                            <p class="feature-desc">Audits 30+ HTTP security headers including CSP, X-Frame-Options,
+                                CORS policies, and Permissions-Policy.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 reveal">
+                        <div class="feature-card">
+                            <div class="feature-icon" style="background: rgba(16, 185, 129, 0.12); color: #10b981;">
+                                <i class="fa-solid fa-cookie-bite"></i>
+                            </div>
+                            <h5 class="feature-title">Cookie Inspector</h5>
+                            <p class="feature-desc">Validates cookie security flags — Secure, HttpOnly, SameSite, expiry
+                                duration — to prevent session hijacking attacks.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 reveal">
+                        <div class="feature-card">
+                            <div class="feature-icon" style="background: rgba(239, 68, 68, 0.12); color: #ef4444;">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                            </div>
+                            <h5 class="feature-title">Sensitive Exposure</h5>
+                            <p class="feature-desc">Discovers exposed files like .env, .git/config, wp-config.php,
+                                backup archives, and database dumps left on production servers.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 reveal">
+                        <div class="feature-card">
+                            <div class="feature-icon" style="background: rgba(59, 130, 246, 0.12); color: #3b82f6;">
+                                <i class="fa-solid fa-magnifying-glass-chart"></i>
+                            </div>
+                            <h5 class="feature-title">OSINT Reconnaissance</h5>
+                            <p class="feature-desc">Gathers DNS records, WHOIS data, server fingerprints, and technology
+                                stack information through passive intelligence.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 reveal">
+                        <div class="feature-card">
+                            <div class="feature-icon" style="background: rgba(168, 85, 247, 0.12); color: #a855f7;">
+                                <i class="fa-solid fa-file-pdf"></i>
+                            </div>
+                            <h5 class="feature-title">PDF Report Export</h5>
+                            <p class="feature-desc">Generates professional, executive-ready PDF vulnerability reports
+                                with scoring, severity breakdown, and remediation guidance.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section class="py-5 mt-4" id="how-it-works">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-5 mb-5 mb-lg-0 reveal">
+                        <div class="section-heading">Workflow</div>
+                        <h2 class="section-title">How It Works</h2>
+                        <p class="section-subtitle">Three simple steps to a comprehensive security audit of any website.
+                        </p>
+                    </div>
+                    <div class="col-lg-7 reveal">
+                        <div class="d-flex align-items-start gap-3 mb-2">
+                            <div class="step-number">1</div>
+                            <div>
+                                <h5 class="step-title">Enter Target URL</h5>
+                                <p class="step-desc">Provide any public-facing website URL. WebGuard validates
+                                    reachability and resolves DNS automatically.</p>
+                            </div>
+                        </div>
+                        <div class="step-connector"></div>
+                        <div class="d-flex align-items-start gap-3 mb-2">
+                            <div class="step-number">2</div>
+                            <div>
+                                <h5 class="step-title">Automated Deep Scan</h5>
+                                <p class="step-desc">Our unified scanner engine runs 9 security modules in parallel —
+                                    analyzing headers, SSL, cookies, exposed files, and more.</p>
+                            </div>
+                        </div>
+                        <div class="step-connector"></div>
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="step-number">3</div>
+                            <div>
+                                <h5 class="step-title">Review & Export</h5>
+                                <p class="step-desc">Get a detailed dashboard with severity breakdown, scored risk
+                                    rating, and download PDF or JSON reports instantly.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tech Stack -->
+        <section class="py-5 mt-4" id="tech">
+            <div class="container text-center reveal">
+                <div class="section-heading">Built With</div>
+                <h2 class="section-title mb-4">Modern Technology Stack</h2>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <span class="tech-pill" style="--pill-c:#3776AB; --pill-g:rgba(55,118,171,0.15);"><i
+                            class="fa-brands fa-python"></i> Python 3</span>
+                    <span class="tech-pill" style="--pill-c:#009688; --pill-g:rgba(0,150,136,0.15);"><i
+                            class="fa-solid fa-bolt"></i> FastAPI</span>
+                    <span class="tech-pill" style="--pill-c:#E34F26; --pill-g:rgba(227,79,38,0.15);"><i
+                            class="fa-brands fa-html5"></i> HTML5</span>
+                    <span class="tech-pill" style="--pill-c:#7952B3; --pill-g:rgba(121,82,179,0.15);"><i
+                            class="fa-brands fa-bootstrap"></i> Bootstrap 5</span>
+                    <span class="tech-pill" style="--pill-c:#F7DF1E; --pill-g:rgba(247,223,30,0.15);"><i
+                            class="fa-brands fa-js"></i> JavaScript</span>
+                    <span class="tech-pill" style="--pill-c:#FF6384; --pill-g:rgba(255,99,132,0.15);"><i
+                            class="fa-solid fa-chart-pie"></i> Chart.js</span>
+                    <span class="tech-pill" style="--pill-c:#0EA5E9; --pill-g:rgba(14,165,233,0.15);"><i
+                            class="fa-solid fa-database"></i> SQLite</span>
+                    <span class="tech-pill" style="--pill-c:#E44D26; --pill-g:rgba(228,77,38,0.15);"><i
+                            class="fa-solid fa-file-pdf"></i> ReportLab</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="py-5 mt-3 reveal">
+            <div class="container">
+                <div class="text-center p-5 cta-box">
+                    <h2 class="cta-title mb-3">Ready to Audit Your Website?</h2>
+                    <p class="cta-desc mb-4 mx-auto" style="max-width: 480px;">Launch the security scanner now and get a
+                        full vulnerability report in under 30 seconds.</p>
+                    <a href="/dashboard" class="btn-cta" style="padding: 0.8rem 2.5rem; font-size: 1.05rem;">
+                        <i class="fa-solid fa-shield-halved"></i> Open Security Dashboard
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                <div class="footer-text">
+                    <i class="fa-solid fa-shield-halved me-1" style="color: var(--primary);"></i>
+                    <strong style="color: var(--text-main);">WebGuard Scanner</strong> — Automated Security Auditing
+                    Platform
+                </div>
+                <div class="footer-text">
+                    Built with <i class="fa-solid fa-heart" style="color: #ef4444;"></i> using Python &amp; FastAPI
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // =========================================
+        // 0. Theme Toggle (Dark/Light)
+        // =========================================
+        function getTheme() {
+            return localStorage.getItem('homepage-theme') || 'dark';
+        }
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            const icon = document.getElementById('themeIcon');
+            if (icon) {
+                icon.className = theme === 'dark'
+                    ? 'fa-solid fa-moon'
+                    : 'fa-solid fa-sun';
+            }
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme') || 'dark';
+            const next = current === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('homepage-theme', next);
+            applyTheme(next);
+        }
+
+        // Initialize theme from saved preference
+        applyTheme(getTheme());
+
+        // =========================================
+        // 1. Matrix Rain Background Canvas
+        // =========================================
+        const matrixCanvas = document.getElementById('matrixCanvas');
+        const mCtx = matrixCanvas.getContext('2d');
+
+        function resizeMatrix() {
+            matrixCanvas.width = window.innerWidth;
+            matrixCanvas.height = window.innerHeight;
+        }
+        resizeMatrix();
+        window.addEventListener('resize', resizeMatrix);
+
+        const fontSize = 14;
+        let columns = Math.floor(matrixCanvas.width / fontSize);
+        let drops = Array(columns).fill(1);
+
+        const matrixChars = '01{};<>$#&%!?+-*/|\\'.split('');
+
+        function drawMatrixRain() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            mCtx.fillStyle = isDark ? 'rgba(3, 7, 18, 0.06)' : 'rgba(248, 250, 252, 0.08)';
+            mCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+
+            mCtx.fillStyle = isDark ? 'rgba(16, 185, 129, 0.55)' : 'rgba(99, 102, 241, 0.45)';
+            mCtx.font = `${fontSize}px "JetBrains Mono", Courier, monospace`;
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+                mCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrixRain, 50);
+
+        window.addEventListener('resize', () => {
+            columns = Math.floor(matrixCanvas.width / fontSize);
+            drops = Array(columns).fill(1);
+        });
+
+        // =========================================
+        // 2. Terminal Animation
+        // =========================================
+        const terminalLines = [
+            { text: '<span class="prompt">$</span> webguard scan <span class="flag">--full</span> <span class="url-text">https://example.com</span>', delay: 400 },
+            { text: '<span class="info">[INFO]</span> Resolving DNS and checking reachability...', delay: 600 },
+            { text: '<span class="ok">[PASS]</span> Target reachable — HTTP 200 OK', delay: 500 },
+            { text: '<span class="info">[INFO]</span> Analyzing SSL/TLS configuration...', delay: 500 },
+            { text: '<span class="ok">[PASS]</span> TLSv1.3 — TLS_AES_256_GCM_SHA384', delay: 400 },
+            { text: '<span class="info">[INFO]</span> Scanning 30+ security headers...', delay: 500 },
+            { text: '<span class="warn">[WARN]</span> Missing: Content-Security-Policy', delay: 400 },
+            { text: '<span class="warn">[WARN]</span> Missing: Permissions-Policy', delay: 300 },
+            { text: '<span class="info">[INFO]</span> Checking sensitive file exposure...', delay: 500 },
+            { text: '<span class="ok">[PASS]</span> No exposed .env or .git files detected', delay: 400 },
+            { text: '<span class="info">[INFO]</span> Generating risk score...', delay: 500 },
+            { text: '<span class="ok">[DONE]</span> Security Score: <strong style="color:#818cf8">78/100</strong> — Rating: <span class="warn">MEDIUM</span>', delay: 0 },
+        ];
+
+        const terminalBody = document.getElementById('terminalBody');
+        let lineIndex = 0;
+
+        function typeNextLine() {
+            if (lineIndex >= terminalLines.length) {
+                setTimeout(() => {
+                    terminalBody.innerHTML = '';
+                    lineIndex = 0;
+                    typeNextLine();
+                }, 4000);
+                return;
+            }
+            const lineData = terminalLines[lineIndex];
+            const lineEl = document.createElement('div');
+            lineEl.className = 'line';
+            lineEl.innerHTML = lineData.text;
+            lineEl.style.animationDelay = '0s';
+            terminalBody.appendChild(lineEl);
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+            lineIndex++;
+            setTimeout(typeNextLine, lineData.delay + 200);
+        }
+        setTimeout(typeNextLine, 800);
+
+        // =========================================
+        // 3. Scroll Reveal
+        // =========================================
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15 });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // =========================================
+        // 4. Stats Counter Animation
+        // =========================================
+        const statNumbers = document.querySelectorAll('.stat-number[data-target]');
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const target = parseInt(el.getAttribute('data-target'));
+                    let current = 0;
+                    const increment = Math.max(1, Math.floor(target / 40));
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            current = target;
+                            clearInterval(timer);
+                        }
+                        el.textContent = current + '+';
+                    }, 40);
+                    statsObserver.unobserve(el);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        statNumbers.forEach(el => statsObserver.observe(el));
+
+        // =========================================
+        // 5. Binary Particle Trail Mouse Effect
+        //    (Same as dashboard implementation)
+        // =========================================
+        const pCanvas = document.getElementById('particleCanvas');
+        const pCtx = pCanvas?.getContext('2d');
+        const trailParticles = [];
+
+        function resizeParticleCanvas() {
+            if (pCanvas) {
+                pCanvas.width = window.innerWidth;
+                pCanvas.height = window.innerHeight;
+            }
+        }
+        resizeParticleCanvas();
+        window.addEventListener('resize', resizeParticleCanvas);
+
+        window.addEventListener('mousemove', (e) => {
+            spawnBinaryParticle(e.clientX, e.clientY);
+        });
+
+        function spawnBinaryParticle(x, y) {
+            const vx = (Math.random() - 0.5) * 0.4;
+            const vy = 0.6 + Math.random() * 0.8;
+
+            const cyberChars = ['0', '1', '{', '}', ';', '<', '>', '#', '$', '&', '[', ']', '*', '+', '%', '?', '!', '/'];
+            const character = cyberChars[Math.floor(Math.random() * cyberChars.length)];
+
+            trailParticles.push({
+                x: x + (Math.random() - 0.5) * 10,
+                y: y + (Math.random() - 0.5) * 10,
+                vx: vx,
+                vy: vy,
+                text: character,
+                size: 11 + Math.random() * 6,
+                alpha: 1.0,
+                decay: 0.02 + Math.random() * 0.015
+            });
+        }
+
+        function animateBinaryParticles() {
+            if (!pCtx || !pCanvas) return;
+
+            pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            // Dark = green hacker style, Light = orange security style
+            const colorPrefix = isDark ? 'rgba(34, 197, 94, ' : 'rgba(249, 115, 22, ';
+
+            for (let i = trailParticles.length - 1; i >= 0; i--) {
+                const p = trailParticles[i];
+
+                p.x += p.vx;
+                p.y += p.vy;
+                p.alpha -= p.decay;
+
+                if (p.alpha <= 0) {
+                    trailParticles.splice(i, 1);
+                    continue;
+                }
+
+                pCtx.beginPath();
+                pCtx.font = `bold ${p.size}px "Courier New", Courier, monospace`;
+                pCtx.fillStyle = colorPrefix + p.alpha + ')';
+
+                // Glow effect
+                pCtx.shadowBlur = 4;
+                pCtx.shadowColor = colorPrefix + '0.4)';
+
+                pCtx.fillText(p.text, p.x, p.y);
+
+                pCtx.shadowBlur = 0;
+            }
+
+            requestAnimationFrame(animateBinaryParticles);
+        }
+
+        requestAnimationFrame(animateBinaryParticles);
+    </script>
+</body>
+
+</html>
