@@ -507,13 +507,10 @@
                             </div>
                         </div>
                         <div class="col-md-5">
-                            <div class="card p-4 h-100 text-center">
-                                <h6 class="text-uppercase text-muted fw-bold mb-3">Overall Security Rating</h6>
-                                <div class="score-circle mb-3">
-                                    <div class="d-flex flex-column align-items-center">
-                                        <span class="score-display text-primary" id="reportScore">90</span>
-                                        <span class="small text-muted mt-1">out of 100</span>
-                                    </div>
+                            <div class="card p-4 h-100 text-center d-flex flex-column justify-content-center align-items-center">
+                                <h6 class="text-uppercase text-muted fw-bold mb-3">Security Risk Level</h6>
+                                <div class="mb-3" id="ratingIconContainer" style="font-size: 4.5rem; transition: all 0.3s ease;">
+                                    <i class="fa-solid fa-shield"></i>
                                 </div>
                                 <div>
                                     <span class="badge px-3 py-2 fs-6 text-uppercase" id="reportRatingBadge">SAFE</span>
@@ -727,8 +724,7 @@
                             <div class="small text-muted" style="font-size: 0.75rem;">${formattedDate}</div>
                         </div>
                         <div class="text-end">
-                            <span class="badge ${ratingClass} text-uppercase px-2 py-1 mb-1" style="font-size: 0.7rem;">${item.risk_rating}</span>
-                            <div class="small fw-bold text-primary" style="font-size: 0.85rem;">Score: ${item.security_score}</div>
+                            <span class="badge ${ratingClass} text-uppercase px-2 py-1" style="font-size: 0.7rem;">${item.risk_rating}</span>
                         </div>
                     `;
                     historyList.appendChild(itemDiv);
@@ -876,15 +872,42 @@
             document.getElementById("reportIp").innerText = dns.ip_address || "N/A";
             document.getElementById("reportReachability").innerText = `Reachable [HTTP ${reach.status_code || 'N/A'}]`;
             
-            // Score and Rating
-            const score = report.security_score !== undefined ? report.security_score : 100;
+            // Rating & Dynamic Icon
             const rating = report.risk_rating || "Safe";
-            
-            document.getElementById("reportScore").innerText = score;
             
             const ratingBadge = document.getElementById("reportRatingBadge");
             ratingBadge.className = "badge px-3 py-2 fs-6 text-uppercase " + getRatingBadgeClass(rating);
             ratingBadge.innerText = rating;
+
+            const iconContainer = document.getElementById("ratingIconContainer");
+            if (iconContainer) {
+                let iconHtml = "";
+                let colorHex = "#64748b";
+                
+                const lowerRating = rating.toLowerCase();
+                if (lowerRating === "safe") {
+                    iconHtml = '<i class="fa-solid fa-circle-check"></i>';
+                    colorHex = "var(--info)";
+                } else if (lowerRating === "low") {
+                    iconHtml = '<i class="fa-solid fa-shield"></i>';
+                    colorHex = "var(--low)";
+                } else if (lowerRating === "medium") {
+                    iconHtml = '<i class="fa-solid fa-shield-halved"></i>';
+                    colorHex = "var(--medium)";
+                } else if (lowerRating === "high") {
+                    iconHtml = '<i class="fa-solid fa-triangle-exclamation"></i>';
+                    colorHex = "var(--high)";
+                } else if (lowerRating === "critical") {
+                    iconHtml = '<i class="fa-solid fa-radiation"></i>';
+                    colorHex = "var(--critical)";
+                } else {
+                    iconHtml = '<i class="fa-solid fa-shield"></i>';
+                    colorHex = "var(--text-muted)";
+                }
+                
+                iconContainer.innerHTML = iconHtml;
+                iconContainer.style.color = colorHex;
+            }
             
             // Infrastructure card
             document.getElementById("hostSslScheme").innerText = trans.is_https ? "HTTPS" : "HTTP Only";
