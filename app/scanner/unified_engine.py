@@ -61,9 +61,9 @@ def run_full_scan(url):
     info_res = None
     sensitive_res = None
 
-    # Determine if SSL analysis is applicable (only for HTTPS scheme)
-    parsed_url = urlparse(url)
-    is_https = parsed_url.scheme.lower() == "https"
+    # Determine if SSL analysis is applicable (initial scheme is HTTPS, or final resolved URL after redirects is HTTPS)
+    final_url = base_check.get("redirects", {}).get("final_url") or url
+    is_https = urlparse(url).scheme.lower() == "https" or urlparse(final_url).scheme.lower() == "https"
 
     # ---- Step 2: Run Header Analysis ----
     try:
@@ -82,7 +82,8 @@ def run_full_scan(url):
     # ---- Step 3: Run SSL/TLS Analysis (if HTTPS) ----
     if is_https:
         try:
-            ssl_res = ssl_analysis(url)
+            target_ssl_url = final_url if urlparse(final_url).scheme.lower() == "https" else url
+            ssl_res = ssl_analysis(target_ssl_url)
             if ssl_res.get("status") == "Success":
                 all_findings.extend(ssl_res.get("findings", []))
             elif ssl_res.get("status") == "Error" and "findings" in ssl_res:

@@ -779,6 +779,7 @@ def check_website(url):
             "ipv4": dns_result["ipv4_addresses"],
             "ipv6": dns_result["ipv6_addresses"],
             "resolution_time_ms": dns_result["resolution_time_ms"],
+            "ip_address": dns_result["ipv4_addresses"][0] if dns_result["ipv4_addresses"] else (dns_result["ipv6_addresses"][0] if dns_result["ipv6_addresses"] else "N/A"),
         },
         "reachability": {
             "status_code": reachability["status_code"],
