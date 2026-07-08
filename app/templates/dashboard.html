@@ -915,8 +915,8 @@
             document.getElementById("hostCipher").innerText = ssl.cipher_suite || "N/A";
             document.getElementById("hostCipher").title = ssl.cipher_suite || "N/A";
             document.getElementById("hostRobots").innerText = report.robots_txt && report.robots_txt.present ? "Present" : "Not Found";
-            document.getElementById("hostServer").innerText = reach.server_header || "Not Disclosed";
-            document.getElementById("hostServer").title = reach.server_header || "Not Disclosed";
+            document.getElementById("hostServer").innerText = reach.server || "Not Disclosed";
+            document.getElementById("hostServer").title = reach.server || "Not Disclosed";
             
             // Count Badges
             const counts = report.severity_counts || {critical:0, high:0, medium:0, low:0, info:0};
