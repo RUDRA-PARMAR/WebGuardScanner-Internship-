@@ -231,7 +231,6 @@ def generate_pdf_report(report):
     # -------------------------------------------------------------------------
     # 2. Executive Summary Metrics Table
     # -------------------------------------------------------------------------
-    score = report.get("security_score", 100)
     rating = report.get("risk_rating", "Safe")
     text_color_badge, bg_color_badge = get_risk_rating_badge_style(rating)
     
@@ -239,10 +238,6 @@ def generate_pdf_report(report):
         [
             Paragraph("<b>Target URL:</b>", body_style),
             Paragraph(f"<font color='#0D47A1'><b>{html.escape(report.get('url', ''))}</b></font>", body_style)
-        ],
-        [
-            Paragraph("<b>Security Score:</b>", body_style),
-            Paragraph(f"<font size='14' color='#1A237E'><b>{score} / 100</b></font> (Higher is better)", body_style)
         ],
         [
             Paragraph("<b>Risk Rating:</b>", body_style),
@@ -313,7 +308,7 @@ def generate_pdf_report(report):
         [Paragraph("<b>DNS Status</b>", body_style), Paragraph("Resolved successfully" if dns_info.get("resolved") else "DNS Resolution Failed", body_style)],
         [Paragraph("<b>IP Address</b>", body_style), Paragraph(dns_info.get("ip_address", "N/A"), body_style)],
         [Paragraph("<b>HTTP Status Code</b>", body_style), Paragraph(str(reach_info.get("status_code", "N/A")), body_style)],
-        [Paragraph("<b>Server Header</b>", body_style), Paragraph(html.escape(reach_info.get("server_header", "Not disclosed")), body_style)],
+        [Paragraph("<b>Server Header</b>", body_style), Paragraph(html.escape(reach_info.get("server", "Not disclosed")), body_style)],
         [Paragraph("<b>HTTPS Scheme</b>", body_style), Paragraph("Yes" if trans_info.get("is_https") else "No", body_style)],
     ]
     

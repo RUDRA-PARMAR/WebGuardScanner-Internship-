@@ -172,6 +172,9 @@ def api_scan_json(scan_id: int):
         if not report:
             return {"status": "Error", "error": "Scan report not found"}
             
+        if "security_score" in report:
+            report.pop("security_score")
+            
         headers = {
             'Content-Disposition': f'attachment; filename="webguard_report_{scan_id}.json"'
         }
