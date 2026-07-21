@@ -3,10 +3,12 @@ import json
 import os
 import datetime
 
-DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "webguard.db")
+DB_PATH = os.getenv("DB_PATH", os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "webguard.db"))
 
 def get_db_connection():
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DB_PATH, timeout=10.0)
+    conn.execute("PRAGMA journal_mode=WAL;")
+    conn.execute("PRAGMA busy_timeout=5000;")
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -31,17 +33,20 @@ def init_db():
             raw_report TEXT NOT NULL
         )
     """)
+    cursor.execute("""
+        CREATE INDEX IF NOT EXISTS idx_scans_url_timestamp ON scans(url, timestamp DESC)
+    """)
     conn.commit()
     conn.close()
 
 def calculate_security_metrics(severity_counts):
     """
     Calculates a security score out of 100 and maps it to a risk rating.
-    Weights:
-      - Critical: -30 points
-      - High: -20 points
-      - Medium: -10 points
-      - Low: -2 points
+    Balanced weights with caps:
+      - Critical: -25 points (max deduction 50)
+      - High: -12 points (max deduction 36)
+      - Medium: -5 points (max deduction 20)
+      - Low: -1 point (max deduction 10)
       - Info: -0 points
     """
     crit = severity_counts.get("critical", 0)
@@ -49,7 +54,12 @@ def calculate_security_metrics(severity_counts):
     med = severity_counts.get("medium", 0)
     low = severity_counts.get("low", 0)
     
-    score = 100 - (crit * 30 + high * 20 + med * 10 + low * 2)
+    deduction_crit = min(50, crit * 25)
+    deduction_high = min(36, high * 12)
+    deduction_med = min(20, med * 5)
+    deduction_low = min(10, low * 1)
+    
+    score = 100 - (deduction_crit + deduction_high + deduction_med + deduction_low)
     score = max(0, score)
     
     if crit > 0:
@@ -76,6 +86,12 @@ def save_scan(url, report):
     
     score, rating = calculate_security_metrics(severity_counts)
     
+    # Override rating for unreachable, blocked, or failed scans
+    status = report.get("status", "")
+    if status in ["Blocked", "Invalid", "DNS Failure", "Unreachable"] or not report.get("reachable", True):
+        rating = status if status else "Unreachable"
+        score = 0
+
     # Store calculated metrics back in the report dict for consistency
     report["security_score"] = score
     report["risk_rating"] = rating
@@ -131,21 +147,30 @@ def get_history():
     
     history = []
     for r in rows:
+        severity_counts = {
+            "critical": r["critical_count"],
+            "high": r["high_count"],
+            "medium": r["medium_count"],
+            "low": r["low_count"],
+            "info": r["info_count"]
+        }
+        score, rating = calculate_security_metrics(severity_counts)
+        
+        # Override rating for unreachable, blocked, or failed scans
+        stored_rating = r["risk_rating"]
+        if stored_rating in ["Blocked", "Invalid", "DNS Failure", "Unreachable"] or not r["reachable"]:
+            rating = stored_rating if stored_rating else "Unreachable"
+            score = 0
+            
         history.append({
             "id": r["id"],
             "url": r["url"],
             "timestamp": r["timestamp"],
             "reachable": bool(r["reachable"]),
             "total_findings": r["total_findings"],
-            "severity_counts": {
-                "critical": r["critical_count"],
-                "high": r["high_count"],
-                "medium": r["medium_count"],
-                "low": r["low_count"],
-                "info": r["info_count"]
-            },
-            "security_score": r["security_score"],
-            "risk_rating": r["risk_rating"]
+            "severity_counts": severity_counts,
+            "security_score": score,
+            "risk_rating": rating
         })
     return history
 
@@ -160,5 +185,43 @@ def get_scan_detail(scan_id):
     if row:
         report = json.loads(row["raw_report"])
         report["timestamp"] = row["timestamp"]
+        
+        # Recalculate metrics dynamically to support new formula
+        severity_counts = report.get("severity_counts", {
+            "critical": 0, "high": 0, "medium": 0, "low": 0, "info": 0
+        })
+        score, rating = calculate_security_metrics(severity_counts)
+        status = report.get("status", "")
+        if status in ["Blocked", "Invalid", "DNS Failure", "Unreachable"] or not report.get("reachable", True):
+            rating = status if status else "Unreachable"
+            score = 0
+            
+        report["security_score"] = score
+        report["risk_rating"] = rating
         return report
     return None
+
+def get_latest_report_for_url(url):
+    """Retrieves the most recent raw report for a given URL to support script drift checks."""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("SELECT raw_report FROM scans WHERE url = ? ORDER BY timestamp DESC LIMIT 1", (url,))
+        row = cursor.fetchone()
+        if row:
+            return json.loads(row["raw_report"])
+    except Exception:
+        pass
+    finally:
+        conn.close()
+    return None
+
+
+def delete_scan(scan_id):
+    """Deletes a specific scan from the database."""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM scans WHERE id = ?", (scan_id,))
+    conn.commit()
+    conn.close()
+

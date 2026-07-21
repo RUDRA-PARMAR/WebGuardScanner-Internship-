@@ -137,6 +137,27 @@ def parse_set_cookie_header(header_value):
     return cookie
 
 
+def split_combined_set_cookie(header_value):
+    """Splits a combined Set-Cookie header value safely, respecting expires dates."""
+    if not header_value:
+        return []
+    cookies = []
+    current = []
+    parts = header_value.split(",")
+    for part in parts:
+        part = part.strip()
+        # Check if part is part of a date (e.g. ends with GMT/UTC or has no = sign)
+        if current and (any(part.lower().endswith(tz) for tz in ["gmt", "utc"]) or not "=" in part):
+            current.append(part)
+        else:
+            if current:
+                cookies.append(", ".join(current))
+            current = [part]
+    if current:
+        cookies.append(", ".join(current))
+    return cookies
+
+
 def extract_cookies_from_response(response):
     """
     Extract all cookies by parsing raw Set-Cookie headers from the response.
@@ -163,9 +184,11 @@ def extract_cookies_from_response(response):
 
     # Parse each Set-Cookie header
     for header in set_cookie_headers:
-        parsed = parse_set_cookie_header(header)
-        if parsed["name"]:
-            cookies.append(parsed)
+        individual_headers = split_combined_set_cookie(header)
+        for ind_header in individual_headers:
+            parsed = parse_set_cookie_header(ind_header)
+            if parsed["name"]:
+                cookies.append(parsed)
 
     # If we still have no cookies from headers, build from response.cookies
     if not cookies and response.cookies:

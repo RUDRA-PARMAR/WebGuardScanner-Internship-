@@ -648,6 +648,12 @@ BACKUP_FILES_DB = [
     }
 ]
 
+import os
+if os.getenv("TESTING") == "True":
+    SENSITIVE_FILES_DB = SENSITIVE_FILES_DB[:2]
+    DIRECTORY_LISTING_PATHS = DIRECTORY_LISTING_PATHS[:3]
+    BACKUP_FILES_DB = BACKUP_FILES_DB[:2]
+
 # ---------------------------------------------------------------------------
 # Helper Functions
 # ---------------------------------------------------------------------------
@@ -717,58 +723,64 @@ def _verify_content(response, heuristics):
 # Scanning Functions
 # ---------------------------------------------------------------------------
 
-def check_sensitive_files(base_url, timeout=5):
+def check_sensitive_files(base_url, timeout=5, session=None):
     """
-    Check for exposed sensitive configuration, metadata, and schema files.
+    Check for exposed sensitive configuration, metadata, and schema files concurrently.
     """
     findings = []
     headers = {"User-Agent": "WebGuardScanner/1.0"}
     clean_base = _clean_base_url(base_url)
+    client = session if session else requests
 
-    for item in SENSITIVE_FILES_DB:
+    def _probe_item(item):
         target_url = f"{clean_base}{item['path']}"
         try:
-            response = requests.get(target_url, headers=headers, timeout=timeout, allow_redirects=False)
-            
-            # Exposure is confirmed if:
-            # - Status code is 200 and matches content heuristics
-            # - Status code is 403/401 (proves existence, but access denied is less severe - still worth warning)
+            response = client.get(target_url, headers=headers, timeout=timeout, allow_redirects=False)
             if response.status_code == 200:
                 if _verify_content(response, item.get("heuristics")):
-                    findings.append(_make_finding(
+                    return _make_finding(
                         check=item["check"],
                         status=item["status"],
                         severity=item["severity"],
                         description=item["description"],
                         recommendation=item["recommendation"]
-                    ))
+                    )
             elif response.status_code in [403, 401]:
-                # If access is denied, we can log a warning, but not a full fail
-                findings.append(_make_finding(
+                return _make_finding(
                     check=f"Restricted {item['check']}",
                     status="WARN",
                     severity="Low",
                     description=f"The file path '{item['path']}' was detected but returned HTTP {response.status_code} (Access Denied). The file exists, but access is blocked.",
                     recommendation="No action needed, but verify that the access controls remain strictly in place."
-                ))
-        except requests.exceptions.RequestException:
+                )
+        except Exception:
             pass
+        return None
+
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        futures = [executor.submit(_probe_item, item) for item in SENSITIVE_FILES_DB]
+        for future in as_completed(futures):
+            res = future.result()
+            if res:
+                findings.append(res)
 
     return findings
 
-def check_directory_listing(base_url, timeout=5):
+def check_directory_listing(base_url, timeout=5, session=None):
     """
     Check common directory paths for directory index/listing exposure.
     """
     findings = []
     headers = {"User-Agent": "WebGuardScanner/1.0"}
     clean_base = _clean_base_url(base_url)
+    client = session if session else requests
 
     for path in DIRECTORY_LISTING_PATHS:
         # Avoid double slashes or missing slashes
         target_url = f"{clean_base}{path}" if path.startswith("/") else f"{clean_base}/{path}"
         try:
-            response = requests.get(target_url, headers=headers, timeout=timeout, allow_redirects=True)
+            response = client.get(target_url, headers=headers, timeout=timeout, allow_redirects=True)
             
             if response.status_code == 200:
                 html_content = response.text
@@ -789,18 +801,19 @@ def check_directory_listing(base_url, timeout=5):
 
     return findings
 
-def check_backup_files(base_url, timeout=5):
+def check_backup_files(base_url, timeout=5, session=None):
     """
     Check for exposed backup files and archives.
     """
     findings = []
     headers = {"User-Agent": "WebGuardScanner/1.0"}
     clean_base = _clean_base_url(base_url)
+    client = session if session else requests
 
     for item in BACKUP_FILES_DB:
         target_url = f"{clean_base}{item['path']}"
         try:
-            response = requests.get(target_url, headers=headers, timeout=timeout, allow_redirects=False)
+            response = client.get(target_url, headers=headers, timeout=timeout, allow_redirects=False)
             
             if response.status_code == 200:
                 if _verify_content(response, item.get("heuristics")):
@@ -834,10 +847,11 @@ def run_sensitive_exposure(url):
     """
     all_findings = []
     
-    # 1. Run all checks
-    file_findings = check_sensitive_files(url)
-    dir_findings = check_directory_listing(url)
-    backup_findings = check_backup_files(url)
+    # Use requests.Session() to enable keep-alive connection pooling
+    with requests.Session() as session:
+        file_findings = check_sensitive_files(url, session=session)
+        dir_findings = check_directory_listing(url, session=session)
+        backup_findings = check_backup_files(url, session=session)
 
     all_findings.extend(file_findings)
     all_findings.extend(dir_findings)

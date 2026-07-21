@@ -409,6 +409,57 @@ def _check_info_leak_headers(headers):
     return findings
 
 
+def _check_cors(headers):
+    findings = []
+    origin = headers.get("Access-Control-Allow-Origin", "")
+    credentials = headers.get("Access-Control-Allow-Credentials", "")
+    
+    if origin:
+        origin_lower = origin.strip().lower()
+        creds_lower = credentials.strip().lower()
+        
+        # Insecure CORS: Wildcard or null origin with credentials enabled
+        if origin_lower == "*" and creds_lower == "true":
+            findings.append(_make_finding(
+                check="Insecure CORS Configuration (Wildcard with Credentials)",
+                status="FAIL",
+                severity="High",
+                description=(
+                    "The Access-Control-Allow-Origin header is set to '*' (wildcard) "
+                    "while Access-Control-Allow-Credentials is set to 'true'. This is an "
+                    "invalid/insecure CORS configuration. Browsers will block authenticated "
+                    "requests, but it exposes the server to resource exposure in unauthenticated scopes."
+                ),
+                recommendation="Do not use '*' with Allow-Credentials. Set a specific trusted origin, or handle dynamic origin validation on the server."
+            ))
+        elif origin_lower == "null" and creds_lower == "true":
+            findings.append(_make_finding(
+                check="Insecure CORS Configuration (Null Origin with Credentials)",
+                status="FAIL",
+                severity="High",
+                description=(
+                    "The Access-Control-Allow-Origin header is set to 'null' "
+                    "while Access-Control-Allow-Credentials is set to 'true'. Attackers "
+                    "can use local files or sandboxed iframes to send requests with a "
+                    "null origin, bypassing CORS controls."
+                ),
+                recommendation="Replace 'null' with a specific trusted domain or validate origins dynamically."
+            ))
+        elif origin_lower == "*":
+            findings.append(_make_finding(
+                check="Broad CORS Configuration",
+                status="WARN",
+                severity="Low",
+                description=(
+                    "The Access-Control-Allow-Origin header is set to '*' (wildcard), "
+                    "allowing any website to read responses from this server."
+                ),
+                recommendation="If the resources are sensitive or authenticated, restrict the origin to trusted domains."
+            ))
+            
+    return findings
+
+
 # ---------------------------------------------------------------------------
 # Main Analysis Function
 # ---------------------------------------------------------------------------
@@ -451,6 +502,7 @@ def full_header_scan(url):
     all_findings.extend(_check_permissions_policy(headers))
     all_findings.extend(_check_coop(headers))
     all_findings.extend(_check_info_leak_headers(headers))
+    all_findings.extend(_check_cors(headers))
 
     severity_counts = {
         "critical": 0, "high": 0, "medium": 0, "low": 0,

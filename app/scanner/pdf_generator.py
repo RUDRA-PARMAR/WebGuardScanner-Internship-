@@ -240,6 +240,10 @@ def generate_pdf_report(report):
             Paragraph(f"<font color='#0D47A1'><b>{html.escape(report.get('url', ''))}</b></font>", body_style)
         ],
         [
+            Paragraph("<b>Security Score:</b>", body_style),
+            Paragraph(f"<b><font color='{text_color_badge}'>{report.get('security_score', 100)} / 100</font></b>", body_style)
+        ],
+        [
             Paragraph("<b>Risk Rating:</b>", body_style),
             Paragraph(f"<b><font color='{text_color_badge}'>{rating.upper()}</font></b>", body_style)
         ]
@@ -330,7 +334,43 @@ def generate_pdf_report(report):
         ('BOX', (0,0), (-1,-1), 0.5, colors.HexColor('#BDBDBD')),
     ]))
     story.append(details_table)
-    story.append(Spacer(1, 20))
+    story.append(Spacer(1, 15))
+
+    # -------------------------------------------------------------------------
+    # 4.5 Supply Chain Components (SBOM) Table
+    # -------------------------------------------------------------------------
+    components = report.get("supply_chain_components", [])
+    if components:
+        story.append(Paragraph("Third-Party Supply Chain & Software Bill of Materials (SBOM)", section_title_style))
+        
+        sbom_headers = ["COMPONENT", "VERSION", "TYPE", "CVE COUNT", "SOURCE URL"]
+        sbom_rows = [
+            [Paragraph(f"<font color='white'><b>{h}</b></font>", body_style) for h in sbom_headers]
+        ]
+        for comp in components:
+            cve_cnt = len(comp.get("cves", []))
+            cve_color = "#D32F2F" if cve_cnt > 0 else "#388E3C"
+            src_str = comp.get('source_url', '')
+            if len(src_str) > 45:
+                src_str = src_str[:42] + "..."
+            sbom_rows.append([
+                Paragraph(f"<b>{html.escape(comp.get('name', ''))}</b>", body_style),
+                Paragraph(html.escape(comp.get('version', 'N/A')), body_style),
+                Paragraph(html.escape(comp.get('type', 'script')), body_style),
+                Paragraph(f"<font color='{cve_color}'><b>{cve_cnt}</b></font>", body_style),
+                Paragraph(f"<font size='7'>{html.escape(src_str)}</font>", body_style),
+            ])
+            
+        sbom_table = Table(sbom_rows, colWidths=[1.4*inch, 0.9*inch, 0.8*inch, 0.9*inch, 2.5*inch])
+        sbom_table.setStyle(TableStyle([
+            ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+            ('BACKGROUND', (0,0), (-1,0), primary_color),
+            ('BOTTOMPADDING', (0,0), (-1,-1), 4),
+            ('TOPPADDING', (0,0), (-1,-1), 4),
+            ('GRID', (0,0), (-1,-1), 0.5, colors.HexColor('#E0E0E0')),
+        ]))
+        story.append(sbom_table)
+        story.append(Spacer(1, 15))
 
     # -------------------------------------------------------------------------
     # 5. Detailed Findings & Recommendations
@@ -346,6 +386,8 @@ def generate_pdf_report(report):
         sev_priority = {"critical": 0, "high": 1, "medium": 2, "low": 3, "info": 4}
         sorted_findings = sorted(findings, key=lambda x: sev_priority.get(x.get("severity", "info").lower(), 5))
         
+        right_aligned_badge_style = ParagraphStyle('RightAlignedBadge', parent=body_style, alignment=2)
+
         for idx, f in enumerate(sorted_findings):
             f_severity = f.get("severity", "Info")
             sev_color = get_severity_color(f_severity)
@@ -354,7 +396,7 @@ def generate_pdf_report(report):
             finding_content = [
                 [
                     Paragraph(f"<b>{idx + 1}. {html.escape(f.get('check', ''))}</b>", finding_title_style),
-                    Paragraph(f"<font color='white'><b>{f_severity.upper()}</b></font>", ParagraphStyle('Badge', parent=body_style, alignment=2)) # Right aligned
+                    Paragraph(f"<font color='white'><b>{f_severity.upper()}</b></font>", right_aligned_badge_style)
                 ],
                 [
                     Paragraph("<b>Vulnerability Description:</b>", finding_heading_style),
@@ -375,20 +417,12 @@ def generate_pdf_report(report):
                 det_text = str(f["details"])
                 finding_content.append([
                     Paragraph("<b>Technical Details:</b>", finding_heading_style),
-                    Paragraph(html.escape(det_text), code_style)
+                    Paragraph(html.escape(det_text).replace("\n", "<br/>"), code_style)
                 ])
                 
-            finding_table = Table(finding_content, colWidths=[2.2*inch, 4.3*inch])
-            finding_table.setStyle(TableStyle([
+            table_styles = [
                 ('VALIGN', (0,0), (-1,-1), 'TOP'),
-                ('SPAN', (0,0), (0,0)), # Check name span
-                # Span finding header row entirely across
-                ('SPAN', (0,0), (1,0)),
-                # Span all subsequent body rows
-                ('SPAN', (1,1), (-1,1)),
-                ('SPAN', (1,2), (-1,2)) if len(finding_content) > 2 else ('VALIGN', (0,0), (0,0), 'TOP'),
-                ('SPAN', (1,3), (-1,3)) if len(finding_content) > 3 else ('VALIGN', (0,0), (0,0), 'TOP'),
-                
+                ('SPAN', (0,0), (1,0)), # Check header row spans col 0 & 1
                 ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#ECEFF1')),
                 ('LINELEFT', (0,0), (0,-1), 4, sev_color), # Colored vertical border on the left
                 ('BOX', (0,0), (-1,-1), 0.5, colors.HexColor('#CFD8DC')),
@@ -396,11 +430,35 @@ def generate_pdf_report(report):
                 ('BOTTOMPADDING', (0,0), (-1,-1), 5),
                 ('LEFTPADDING', (0,0), (-1,-1), 8),
                 ('RIGHTPADDING', (0,0), (-1,-1), 8),
-            ]))
+            ]
+            
+            for r_idx in range(1, len(finding_content)):
+                table_styles.append(('SPAN', (1, r_idx), (-1, r_idx)))
+                
+            finding_table = Table(finding_content, colWidths=[2.2*inch, 4.3*inch])
+            finding_table.setStyle(TableStyle(table_styles))
             
             # Wrap in KeepTogether to ensure it doesn't break awkwardly
             story.append(KeepTogether([finding_table, Spacer(1, 10)]))
+
+    # -------------------------------------------------------------------------
+    # 6. Virtual Patches & Security Rules
+    # -------------------------------------------------------------------------
+    v_patches = report.get("virtual_patches", {})
+    if v_patches and v_patches.get("status") == "Success":
+        story.append(Spacer(1, 10))
+        story.append(Paragraph("Recommended Virtual Security Patches", section_title_style))
+        
+        if v_patches.get("nginx"):
+            story.append(Paragraph("<b>Nginx Hardening Configuration Snippet:</b>", finding_heading_style))
+            story.append(Paragraph(html.escape(v_patches["nginx"]).replace("\n", "<br/>"), code_style))
+            story.append(Spacer(1, 8))
             
+        if v_patches.get("apache"):
+            story.append(Paragraph("<b>Apache Server Configuration Snippet:</b>", finding_heading_style))
+            story.append(Paragraph(html.escape(v_patches["apache"]).replace("\n", "<br/>"), code_style))
+            story.append(Spacer(1, 8))
+
     # Build Document
     doc.build(story, canvasmaker=make_canvas)
     
@@ -408,3 +466,4 @@ def generate_pdf_report(report):
     pdf_data = buffer.getvalue()
     buffer.close()
     return pdf_data
+

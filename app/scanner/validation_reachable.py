@@ -9,8 +9,10 @@ import re
 import socket
 import ipaddress
 import time
+import os
 import requests
 from urllib.parse import urlparse, urlunparse
+
 
 
 # ---------------------------------------------------------------------------
@@ -268,42 +270,44 @@ def check_ssrf(hostname):
         return result
 
     # Check each resolved IP against blocked ranges
-    for ip_str in resolved_ips:
-        try:
-            ip = ipaddress.ip_address(ip_str)
-        except ValueError:
-            continue
+    allow_private = os.getenv("ALLOW_PRIVATE_IPS", "False").lower() in ("true", "1", "yes")
+    if not allow_private:
+        for ip_str in resolved_ips:
+            try:
+                ip = ipaddress.ip_address(ip_str)
+            except ValueError:
+                continue
 
-        # Check cloud metadata IPs
-        if ip_str in CLOUD_METADATA_IPS:
-            result["safe"] = False
-            result["findings"].append({
-                "check": "SSRF Protection",
-                "status": "BLOCKED",
-                "severity": "Critical",
-                "description": (
-                    f"'{hostname}' resolves to cloud metadata IP {ip_str}. "
-                    "This is a potential DNS rebinding attack to access "
-                    "cloud instance metadata."
-                ),
-            })
-            continue
-
-        # Check against blocked networks
-        for network in BLOCKED_IP_NETWORKS:
-            if ip in network:
+            # Check cloud metadata IPs
+            if ip_str in CLOUD_METADATA_IPS:
                 result["safe"] = False
                 result["findings"].append({
                     "check": "SSRF Protection",
                     "status": "BLOCKED",
                     "severity": "Critical",
                     "description": (
-                        f"'{hostname}' resolves to private/reserved IP "
-                        f"{ip_str} (in {network}). Scanning internal "
-                        "network addresses is blocked."
+                        f"'{hostname}' resolves to cloud metadata IP {ip_str}. "
+                        "This is a potential DNS rebinding attack to access "
+                        "cloud instance metadata."
                     ),
                 })
-                break
+                continue
+
+            # Check against blocked networks
+            for network in BLOCKED_IP_NETWORKS:
+                if ip in network:
+                    result["safe"] = False
+                    result["findings"].append({
+                        "check": "SSRF Protection",
+                        "status": "BLOCKED",
+                        "severity": "Critical",
+                        "description": (
+                            f"'{hostname}' resolves to private/reserved IP "
+                            f"{ip_str} (in {network}). Scanning internal "
+                            "network addresses is blocked."
+                        ),
+                    })
+                    break
 
     return result
 
@@ -669,6 +673,210 @@ def check_reachability(url):
     return result
 
 
+def audit_dns_security(hostname):
+    findings = []
+    # Skip for direct IPs or local addresses
+    if re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", hostname) or hostname.lower() in ["localhost", "127.0.0.1"]:
+        return findings
+
+    headers = {"Accept": "application/json"}
+    
+    # 1. Check SPF (TXT records on base hostname)
+    try:
+        url = f"https://cloudflare-dns.com/dns-query?name={hostname}&type=TXT"
+        response = requests.get(url, headers=headers, timeout=5)
+        if response.status_code == 200:
+            data = response.json()
+            answers = data.get("Answer", [])
+            has_spf = False
+            for ans in answers:
+                txt_data = ans.get("data", "")
+                if "v=spf1" in txt_data.lower():
+                    has_spf = True
+                    # Validate SPF configuration
+                    if "~all" in txt_data.lower() or "?all" in txt_data.lower():
+                        findings.append({
+                            "check": "Weak SPF Policy",
+                            "status": "WARN",
+                            "severity": "Low",
+                            "description": f"SPF record '{txt_data}' uses a softfail (~all) or neutral (?all) directive. This permits spoofed emails to pass validation in some spam filters.",
+                            "recommendation": "Change the SPF mechanism to hardfail (-all) if appropriate for your mail delivery setup."
+                        })
+                    break
+            if not has_spf:
+                findings.append({
+                    "check": "Missing SPF Record",
+                    "status": "FAIL",
+                    "severity": "Medium",
+                    "description": f"No Sender Policy Framework (SPF) record was found for '{hostname}'. Attackers can easily send spoofed emails pretending to originate from this domain.",
+                    "recommendation": "Configure an SPF TXT record (e.g., 'v=spf1 include:_spf.google.com -all') to authorize specific mail servers."
+                })
+    except Exception:
+        pass
+
+    # 2. Check DMARC (TXT records on _dmarc.hostname)
+    try:
+        url = f"https://cloudflare-dns.com/dns-query?name=_dmarc.{hostname}&type=TXT"
+        response = requests.get(url, headers=headers, timeout=5)
+        if response.status_code == 200:
+            data = response.json()
+            answers = data.get("Answer", [])
+            has_dmarc = False
+            for ans in answers:
+                txt_data = ans.get("data", "")
+                if "v=dmarc1" in txt_data.lower():
+                    has_dmarc = True
+                    # Check policy
+                    if "p=none" in txt_data.lower():
+                        findings.append({
+                            "check": "Weak DMARC Policy",
+                            "status": "WARN",
+                            "severity": "Low",
+                            "description": f"DMARC record '{txt_data}' uses policy 'p=none' (monitoring only). While helpful for testing, it does not instruct receiver servers to block spoofed emails.",
+                            "recommendation": "Upgrade DMARC policy from p=none to p=quarantine or p=reject to enforce email authentication."
+                        })
+                    break
+            if not has_dmarc:
+                findings.append({
+                    "check": "Missing DMARC Record",
+                    "status": "FAIL",
+                    "severity": "Medium",
+                    "description": f"Domain-based Message Authentication, Reporting, and Conformance (DMARC) record is missing for '{hostname}'.",
+                    "recommendation": "Publish a DMARC TXT record under '_dmarc.{hostname}' to specify how receivers should handle unauthorized mail."
+                })
+    except Exception:
+        pass
+
+    # 3. Check Subdomain Takeover (CNAME records)
+    try:
+        url = f"https://cloudflare-dns.com/dns-query?name={hostname}&type=CNAME"
+        response = requests.get(url, headers=headers, timeout=5)
+        if response.status_code == 200:
+            data = response.json()
+            answers = data.get("Answer", [])
+            for ans in answers:
+                cname_target = ans.get("data", "").lower().rstrip(".")
+                
+                # Check known vulnerable SaaS patterns
+                takeover_targets = {
+                    "github.io": "GitHub Pages",
+                    "herokuapp.com": "Heroku",
+                    "s3.amazonaws.com": "AWS S3 Bucket",
+                    "myshopify.com": "Shopify Store",
+                    "azurewebsites.net": "Azure App Service",
+                }
+                
+                for pattern, saas_name in takeover_targets.items():
+                    if pattern in cname_target:
+                        # Probe if the target returns a 404/Not Found indicating the SaaS app is deleted but CNAME points to it
+                        try:
+                            probe_res = requests.get(f"http://{hostname}", timeout=5)
+                            # Signatures of deleted SaaS targets
+                            signatures = [
+                                "There isn't a GitHub Pages site here",
+                                "NoSuchBucket",
+                                "herokucdn.com/error-pages/no-such-app",
+                                "Sorry, this shop is currently unavailable",
+                                "404 Not Found"
+                            ]
+                            if any(sig in probe_res.text for sig in signatures) or probe_res.status_code == 404:
+                                findings.append({
+                                    "check": f"Subdomain Takeover Opportunity ({saas_name})",
+                                    "status": "FAIL",
+                                    "severity": "Critical",
+                                    "description": f"The domain CNAME points to '{cname_target}' ({saas_name}), but the target service returned a 404/Not Found error. An attacker could register this project on {saas_name} and hijack the subdomain.",
+                                    "recommendation": f"Remove the CNAME record in your DNS settings, or claim the resource on the {saas_name} platform."
+                                })
+                        except Exception:
+                            pass
+    except Exception:
+        pass
+
+    # 4. Check DNSSEC
+    try:
+        url = f"https://cloudflare-dns.com/dns-query?name={hostname}&type=DS"
+        response = requests.get(url, headers=headers, timeout=5)
+        if response.status_code == 200:
+            data = response.json()
+            answers = data.get("Answer", [])
+            if not answers:
+                findings.append({
+                    "check": "Missing DNSSEC Security",
+                    "status": "INFO",
+                    "severity": "Info",
+                    "description": f"DNSSEC is not configured for '{hostname}'. Without DNSSEC, the domain is vulnerable to DNS cache poisoning/spoofing attacks.",
+                    "recommendation": "Enable DNSSEC validation at your domain registrar and DNS hosting provider."
+                })
+    except Exception:
+        pass
+
+    return findings
+
+
+def simulate_dns_rebinding(hostname):
+    """
+    Query the DNS of the hostname 5 times rapidly.
+    Detect if the IPs switch between private and public ranges, or if the TTL is low.
+    """
+    findings = []
+    # Skip for direct IPs or local addresses
+    if re.match(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", hostname) or hostname.lower() in ["localhost", "127.0.0.1"]:
+        return findings
+
+    resolutions = []
+    for _ in range(5):
+        try:
+            addr_infos = socket.getaddrinfo(hostname, None, socket.AF_INET, socket.SOCK_STREAM)
+            ips = set(info[4][0] for info in addr_infos)
+            resolutions.append(ips)
+        except Exception:
+            resolutions.append(set())
+        time.sleep(0.05) # 50ms interval
+
+    # 1. Check for IP Rotation (DNS Rebinding)
+    non_empty = [r for r in resolutions if r]
+    if len(non_empty) >= 2:
+        first_set = non_empty[0]
+        rebinding_detected = False
+        for next_set in non_empty[1:]:
+            if next_set != first_set:
+                rebinding_detected = True
+                break
+        
+        if rebinding_detected:
+            findings.append({
+                "check": "DNS Rebinding Vulnerability (IP Rotation)",
+                "status": "FAIL",
+                "severity": "Critical",
+                "description": f"The domain '{hostname}' resolved to different IP sets across rapid subsequent requests: {[list(x) for x in non_empty]}. This is a high-risk indicator of a DNS Rebinding attack pattern designed to bypass SSRF protections.",
+                "recommendation": "Configure static DNS records or enforce DNS resolution caching at the gateway layer."
+            })
+
+    # 2. Check for Low TTL via DoH query
+    try:
+        headers = {"Accept": "application/json"}
+        url = f"https://cloudflare-dns.com/dns-query?name={hostname}&type=A"
+        response = requests.get(url, headers=headers, timeout=5)
+        if response.status_code == 200:
+            data = response.json()
+            answers = data.get("Answer", [])
+            for ans in answers:
+                ttl = ans.get("TTL", 300)
+                if ttl < 5:
+                    findings.append({
+                        "check": "DNS Rebinding Vulnerability (Low TTL)",
+                        "status": "WARN",
+                        "severity": "Medium",
+                        "description": f"The domain '{hostname}' publishes an extremely low DNS TTL ({ttl} seconds). Low TTLs are commonly used in DNS rebinding payloads to force browsers to re-resolve hostnames immediately.",
+                        "recommendation": "Increase the DNS record TTL to at least 60 seconds unless dynamic IP load balancing is strictly required."
+                    })
+                    break
+    except Exception:
+        pass
+
+    return findings
+
+
 # ---------------------------------------------------------------------------
 # Main Analysis Function
 # ---------------------------------------------------------------------------
@@ -733,6 +941,15 @@ def check_website(url):
     # ---- Step 3: DNS Analysis ----
     dns_result = analyze_dns(hostname)
     all_findings.extend(dns_result["findings"])
+
+    # ---- Step 3.5: DNS Security Audits (SPF, DMARC, DNSSEC, Takeover) ----
+    dnssec_findings = audit_dns_security(hostname)
+    all_findings.extend(dnssec_findings)
+
+    # ---- Step 3.6: DNS Rebinding Protection Simulation ----
+    rebinding_findings = simulate_dns_rebinding(hostname)
+    all_findings.extend(rebinding_findings)
+
 
     if not dns_result["resolved"]:
         return {

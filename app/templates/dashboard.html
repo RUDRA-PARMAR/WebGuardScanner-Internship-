@@ -14,26 +14,26 @@
         :root {
             /* Light theme values */
             --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --card-border: #e2e8f0;
+            --card-bg: rgba(255, 255, 255, 0.75);
+            --card-border: rgba(15, 23, 42, 0.08);
             --primary: #4f46e5;
             --primary-hover: #4338ca;
             --text-main: #0f172a;
-            --text-muted: #64748b;
+            --text-muted: #475569;
             
             --critical: #ef4444;
             --high: #f97316;
-            --medium: #eab308;
-            --low: #3b82f6;
-            --info: #10b981;
+            --medium: #d97706;
+            --low: #2563eb;
+            --info: #059669;
             
-            --critical-bg: rgba(239, 68, 68, 0.08);
-            --high-bg: rgba(249, 115, 22, 0.08);
-            --medium-bg: rgba(234, 179, 8, 0.08);
-            --low-bg: rgba(59, 130, 246, 0.08);
-            --info-bg: rgba(16, 185, 129, 0.08);
+            --critical-bg: rgba(239, 68, 68, 0.05);
+            --high-bg: rgba(249, 115, 22, 0.05);
+            --medium-bg: rgba(217, 119, 6, 0.05);
+            --low-bg: rgba(37, 99, 235, 0.05);
+            --info-bg: rgba(5, 150, 105, 0.05);
             
-            --header-bg: linear-gradient(135deg, rgba(79, 70, 229, 0.06) 0%, rgba(192, 132, 252, 0.02) 100%);
+            --header-bg: radial-gradient(circle at 50% 0%, rgba(79, 70, 229, 0.06), transparent 75%);
             --accordion-arrow-filter: none;
             --accordion-body-bg: rgba(0, 0, 0, 0.02);
             --spotlight-color: rgba(79, 70, 229, 0.06);
@@ -41,7 +41,7 @@
             --history-item-hover: rgba(0, 0, 0, 0.04);
             --history-item-active: rgba(79, 70, 229, 0.08);
             --btn-outline-hover-bg: rgba(0, 0, 0, 0.03);
-            --navbar-bg: #ffffff;
+            --navbar-bg: rgba(255, 255, 255, 0.85);
             
             /* Vibe additions */
             --grid-line: rgba(79, 70, 229, 0.035);
@@ -52,35 +52,41 @@
 
         [data-theme="dark"] {
             /* Dark theme values */
-            --bg-color: #0b0f19;
-            --card-bg: #111827;
-            --card-border: #1f2937;
-            --primary: #818cf8;
-            --primary-hover: #6366f1;
-            --text-main: #f3f4f6;
+            --bg-color: #030712;
+            --card-bg: rgba(17, 24, 39, 0.55);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --text-main: #f9fafb;
             --text-muted: #9ca3af;
             
-            --critical-bg: rgba(239, 68, 68, 0.15);
-            --high-bg: rgba(249, 115, 22, 0.15);
-            --medium-bg: rgba(234, 179, 8, 0.15);
-            --low-bg: rgba(59, 130, 246, 0.15);
-            --info-bg: rgba(16, 185, 129, 0.15);
+            --critical: #f43f5e;
+            --high: #f97316;
+            --medium: #fbbf24;
+            --low: #38bdf8;
+            --info: #34d399;
             
-            --header-bg: linear-gradient(135deg, rgba(79, 70, 229, 0.16) 0%, rgba(192, 132, 252, 0.06) 100%);
+            --critical-bg: rgba(244, 63, 94, 0.1);
+            --high-bg: rgba(249, 115, 22, 0.1);
+            --medium-bg: rgba(251, 191, 36, 0.1);
+            --low-bg: rgba(56, 189, 248, 0.1);
+            --info-bg: rgba(52, 211, 153, 0.1);
+            
+            --header-bg: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.15), transparent 75%);
             --accordion-arrow-filter: invert(1);
             --accordion-body-bg: rgba(0, 0, 0, 0.2);
-            --spotlight-color: rgba(79, 70, 229, 0.12);
+            --spotlight-color: rgba(99, 102, 241, 0.12);
             --history-item-bg: rgba(255, 255, 255, 0.02);
-            --history-item-hover: rgba(255, 255, 255, 0.05);
-            --history-item-active: rgba(79, 70, 229, 0.15);
-            --btn-outline-hover-bg: rgba(255, 255, 255, 0.05);
-            --navbar-bg: #111827;
+            --history-item-hover: rgba(255, 255, 255, 0.06);
+            --history-item-active: rgba(99, 102, 241, 0.16);
+            --btn-outline-hover-bg: rgba(255, 255, 255, 0.06);
+            --navbar-bg: rgba(17, 24, 39, 0.85);
             
             /* Vibe additions */
-            --grid-line: rgba(129, 140, 248, 0.045);
+            --grid-line: rgba(129, 140, 248, 0.04);
             --hover-shadow-color: rgba(129, 140, 248, 0.15);
             --hover-border-color: rgba(129, 140, 248, 0.4);
-            --laser-color: #10b981;
+            --laser-color: #34d399;
         }
 
         body {
@@ -89,8 +95,8 @@
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
             transition: background-color 0.3s ease, color 0.3s ease;
+            position: relative;
             
-            /* Override Bootstrap 5 theme colors with our custom variables */
             --bs-body-color: var(--text-main);
             --bs-body-bg: var(--bg-color);
             --bs-heading-color: var(--text-main);
@@ -99,30 +105,28 @@
             --bs-emphasis-color: var(--text-main);
         }
 
-        /* Explicitly guarantee high contrast for headings and elements */
         h1, h2, h3, h4, h5, h6 {
             color: var(--text-main) !important;
-            transition: color 0.3s ease;
+            font-weight: 700;
+            letter-spacing: -0.02em;
         }
 
         .text-muted {
             color: var(--text-muted) !important;
         }
 
-        .card, .accordion-item {
-            color: var(--text-main) !important;
-        }
-
         .navbar {
             background-color: var(--navbar-bg) !important;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--card-border) !important;
             transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
         .navbar-brand {
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            font-size: 1.4rem;
             background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -131,26 +135,29 @@
         .dashboard-header {
             background: var(--header-bg);
             border-bottom: 1px solid var(--card-border);
-            padding: 2rem 0;
+            padding: 2.5rem 0;
             margin-bottom: 2rem;
             transition: background 0.3s ease, border-color 0.3s ease;
+            position: relative;
         }
 
         .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
-            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease, border-color 0.3s ease;
+            background-color: var(--card-bg) !important;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border) !important;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+            overflow: hidden;
         }
 
         .card:hover {
-            box-shadow: 0 12px 20px -3px var(--hover-shadow-color), 0 4px 6px -4px var(--hover-shadow-color);
+            box-shadow: 0 12px 30px var(--hover-shadow-color);
             border-color: var(--hover-border-color) !important;
-            transform: translateY(-3px);
+            transform: translateY(-2px);
         }
 
-        /* Tactical blueprint grid background overlay */
         body::after {
             content: '';
             position: fixed;
@@ -159,17 +166,18 @@
             width: 100vw;
             height: 100vh;
             pointer-events: none;
-            background-size: 30px 30px;
+            background-size: 40px 40px;
             background-image: 
                 linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
                 linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
             z-index: 0;
+            opacity: 0.85;
         }
 
-        /* Console laser scanning sweep */
         .console-wrapper-relative {
             position: relative;
             overflow: hidden;
+            border-radius: 12px;
         }
 
         .console-laser-line {
@@ -177,157 +185,211 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 3px;
+            height: 2px;
             background: linear-gradient(90deg, transparent, var(--laser-color), transparent);
-            box-shadow: 0 0 8px var(--laser-color), 0 0 15px var(--laser-color);
+            box-shadow: 0 0 12px var(--laser-color);
             pointer-events: none;
             z-index: 10;
-            animation: scan-laser 2.5s infinite linear;
+            animation: scan-laser 3s infinite linear;
         }
 
         @keyframes scan-laser {
             0% { top: 0%; opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
             100% { top: 100%; opacity: 0; }
         }
 
         .scan-history-item {
             cursor: pointer;
             border-left: 4px solid transparent;
-            transition: all 0.2s ease;
+            border-radius: 10px;
+            padding: 0.85rem 1rem;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
             background-color: var(--history-item-bg);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.6rem;
+            border: 1px solid transparent;
         }
 
         .scan-history-item:hover {
             background-color: var(--history-item-hover);
-            transform: translateX(3px);
+            transform: translateX(4px);
+            border-color: var(--card-border);
         }
 
         .scan-history-item.active {
-            border-left-color: var(--primary);
+            border-left: 4px solid var(--primary) !important;
             background-color: var(--history-item-active);
+            box-shadow: inset 0 0 12px rgba(99, 102, 241, 0.05);
+            border-color: rgba(99, 102, 241, 0.25);
+        }
+
+        .btn {
+            border-radius: 10px;
+            padding: 0.55rem 1.3rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .btn-primary {
             background-color: var(--primary);
             border-color: var(--primary);
-            font-weight: 500;
-            border-radius: 8px;
-            padding: 0.6rem 1.5rem;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
         }
 
         .btn-primary:hover, .btn-primary:focus {
             background-color: var(--primary-hover);
             border-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.3);
             color: #ffffff;
         }
 
         .btn-outline-secondary {
             border-color: var(--card-border);
             color: var(--text-main);
-            border-radius: 8px;
+            background-color: transparent;
         }
 
         .btn-outline-secondary:hover {
             background-color: var(--btn-outline-hover-bg);
-            border-color: var(--card-border);
+            border-color: var(--text-muted);
             color: var(--text-main);
         }
 
-        .form-control {
+        .form-control, .form-select, .form-textarea {
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
             color: var(--text-main);
-            border-radius: 8px;
-            padding: 0.6rem 1rem;
-            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+            border-radius: 10px;
+            padding: 0.65rem 1.1rem;
+            transition: all 0.25s ease;
         }
 
-        .form-control:focus {
+        .form-control:focus, .form-select:focus, .form-textarea:focus {
             background-color: var(--card-bg);
             border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
             color: var(--text-main);
         }
 
-        .badge-critical { background-color: var(--critical-bg); color: var(--critical); border: 1px solid rgba(239, 68, 68, 0.15); }
-        .badge-high { background-color: var(--high-bg); color: var(--high); border: 1px solid rgba(249, 115, 22, 0.15); }
-        .badge-medium { background-color: var(--medium-bg); color: var(--medium); border: 1px solid rgba(234, 179, 8, 0.15); }
-        .badge-low { background-color: var(--low-bg); color: var(--low); border: 1px solid rgba(59, 130, 246, 0.15); }
-        .badge-info { background-color: var(--info-bg); color: var(--info); border: 1px solid rgba(16, 185, 129, 0.15); }
-        .badge-safe { background-color: var(--info-bg); color: var(--info); border: 1px solid rgba(16, 185, 129, 0.15); }
+        .badge {
+            font-weight: 600;
+            padding: 0.4em 0.8em;
+            border-radius: 6px;
+            font-size: 0.75rem;
+        }
+
+        .badge-critical { background-color: var(--critical-bg); color: var(--critical); border: 1px solid rgba(244, 63, 94, 0.2); filter: drop-shadow(0 0 4px rgba(244, 63, 94, 0.15)); }
+        .badge-high { background-color: var(--high-bg); color: var(--high); border: 1px solid rgba(249, 115, 22, 0.2); filter: drop-shadow(0 0 4px rgba(249, 115, 22, 0.15)); }
+        .badge-medium { background-color: var(--medium-bg); color: var(--medium); border: 1px solid rgba(251, 191, 36, 0.2); }
+        .badge-low { background-color: var(--low-bg); color: var(--low); border: 1px solid rgba(56, 189, 248, 0.2); }
+        .badge-info { background-color: var(--info-bg); color: var(--info); border: 1px solid rgba(52, 211, 153, 0.2); }
+        .badge-safe { background-color: var(--info-bg); color: var(--info); border: 1px solid rgba(52, 211, 153, 0.2); }
+        .badge-blocked, .badge-unreachable, .badge-dns-failure { background-color: var(--critical-bg); color: var(--critical); border: 1px solid rgba(244, 63, 94, 0.2); }
 
         .console-log {
-            background-color: #05070c;
-            border: 1px solid var(--card-border);
-            border-radius: 8px;
+            background-color: #030712;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 0 0 10px 10px;
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.85rem;
-            color: #10b981;
-            padding: 1rem;
-            max-height: 200px;
+            color: #34d399;
+            padding: 1.25rem;
+            max-height: 240px;
             overflow-y: auto;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8);
+            border-top: none;
         }
 
         .score-display {
-            font-size: 3.5rem;
-            font-weight: 700;
+            font-size: 3.2rem;
+            font-weight: 800;
             line-height: 1;
+            background: linear-gradient(135deg, var(--text-main) 30%, var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .score-circle {
             width: 140px;
             height: 140px;
             border-radius: 50%;
-            border: 8px solid var(--card-border);
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto;
             position: relative;
+            transition: all 0.5s ease;
         }
 
         .nav-tabs {
             border-bottom: 1px solid var(--card-border);
+            gap: 0.5rem;
         }
 
         .nav-tabs .nav-link {
             color: var(--text-muted);
             border: none;
-            font-weight: 500;
+            font-weight: 600;
             padding: 0.8rem 1.2rem;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+
+        .nav-tabs .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary);
+            transform: scaleX(0);
+            transition: transform 0.25s ease;
+            border-radius: 3px 3px 0 0;
         }
 
         .nav-tabs .nav-link:hover {
             color: var(--text-main);
-            border: none;
+            background-color: rgba(255, 255, 255, 0.02);
         }
 
         .nav-tabs .nav-link.active {
             background-color: transparent;
             color: var(--primary);
-            border-bottom: 3px solid var(--primary);
+        }
+
+        .nav-tabs .nav-link.active::after {
+            transform: scaleX(1);
         }
 
         .accordion-item {
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 8px !important;
-            margin-bottom: 0.5rem;
+            border-radius: 12px !important;
+            margin-bottom: 0.65rem;
             overflow: hidden;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
+            transition: all 0.25s ease;
+        }
+
+        .accordion-item:hover {
+            border-color: rgba(99, 102, 241, 0.2);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
         }
 
         .accordion-button {
             background-color: var(--card-bg);
             color: var(--text-main);
-            transition: background-color 0.3s ease, color 0.3s ease;
+            font-weight: 600;
+            padding: 1.1rem 1.3rem;
+            transition: all 0.25s ease;
         }
 
         .accordion-button:not(.collapsed) {
-            background-color: rgba(79, 70, 229, 0.04);
+            background-color: rgba(99, 102, 241, 0.04);
             color: var(--primary);
             box-shadow: none;
         }
@@ -338,40 +400,36 @@
 
         .accordion-body {
             background-color: var(--accordion-body-bg);
-            transition: background-color 0.3s ease;
+            padding: 1.3rem;
+            border-top: 1px solid var(--card-border);
         }
 
         .finding-section-title {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.75px;
             color: var(--text-muted);
-            margin-bottom: 0.3rem;
-            font-weight: 600;
-        }
-
-        .metric-card {
-            border-left: 4px solid var(--card-border);
+            margin-bottom: 0.4rem;
+            font-weight: 700;
         }
 
         .pulse-loader {
             display: inline-block;
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background-color: var(--primary);
-            animation: pulse 1.5s infinite;
+            animation: pulse 1.5s infinite ease-in-out;
             vertical-align: middle;
-            margin-right: 6px;
+            margin-right: 8px;
         }
 
         @keyframes pulse {
-            0% { transform: scale(0.8); opacity: 0.5; }
-            50% { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(0.8); opacity: 0.5; }
+            0% { transform: scale(0.85); opacity: 0.45; }
+            50% { transform: scale(1.15); opacity: 1; box-shadow: 0 0 10px var(--primary); }
+            100% { transform: scale(0.85); opacity: 0.45; }
         }
 
-        /* Spotlight mouse move backdrop glow */
         body::before {
             content: '';
             position: fixed;
@@ -380,7 +438,7 @@
             width: 100vw;
             height: 100vh;
             pointer-events: none;
-            background: radial-gradient(600px circle at var(--mouse-x, -1000px) var(--mouse-y, -1000px), var(--spotlight-color), transparent 80%);
+            background: radial-gradient(800px circle at var(--mouse-x, -1000px) var(--mouse-y, -1000px), var(--spotlight-color), transparent 80%);
             z-index: 0;
         }
 
@@ -389,7 +447,6 @@
             z-index: 1;
         }
 
-        /* Fullscreen Particle Canvas Overlay */
         #particleCanvas {
             position: fixed;
             top: 0;
@@ -400,11 +457,60 @@
             z-index: 9999;
             display: block;
         }
+
+        /* Pill modifications */
+        .nav-pills .nav-link {
+            color: var(--text-muted);
+            padding: 0.55rem 1.1rem;
+            font-weight: 600;
+            transition: all 0.25s ease;
+            border-radius: 8px;
+        }
+        .nav-pills .nav-link.active {
+            background-color: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+        }
+
+        /* Copilot Chat Window Styles */
+        .chat-box {
+            height: 400px;
+            overflow-y: auto;
+            background-color: rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+        }
+        [data-theme="dark"] .chat-box {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        .chat-message {
+            margin-bottom: 1.1rem;
+            max-width: 85%;
+            padding: 0.85rem 1.1rem;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            line-height: 1.45;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+        }
+        .chat-message.user {
+            background-color: var(--primary);
+            color: #ffffff;
+            margin-left: auto;
+            border-bottom-right-radius: 2px;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+        }
+        .chat-message.bot {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            margin-right: auto;
+            border-bottom-left-radius: 2px;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Fading Particle Trail Canvas -->
     <canvas id="particleCanvas"></canvas>
 
     <!-- Navigation -->
@@ -427,13 +533,19 @@
     <div class="dashboard-header">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-md-7">
+                <div class="col-md-5">
                     <h1 class="fw-bold mb-1">Security Dashboard</h1>
-                    <p class="text-muted mb-0">Perform automated website vulnerability assessments and download professional PDF reports.</p>
+                    <p class="text-muted mb-0">Perform automated website vulnerability assessments and audit APIs with Copilot recommendations.</p>
                 </div>
-                <div class="col-md-5 mt-3 mt-md-0">
+                <div class="col-md-7 mt-3 mt-md-0">
                     <form id="scanForm" class="input-group">
-                        <input type="url" id="targetUrl" class="form-control" placeholder="https://example.com" required>
+                        <input type="url" id="targetUrl" class="form-control" placeholder="https://example.com" style="flex: 2;" required>
+                        <select id="scanProfile" class="form-select" style="max-width: 150px; background-color: var(--card-bg); color: var(--text-main); border: 1px solid var(--card-border);">
+                            <option value="full" selected>Full Audit</option>
+                            <option value="fast">Fast Scan</option>
+                            <option value="ssl">SSL Only</option>
+                            <option value="headers">Headers Only</option>
+                        </select>
                         <button class="btn btn-primary" type="submit" id="btnScan">
                             <i class="fa-solid fa-circle-play me-2"></i>Run Scan
                         </button>
@@ -443,174 +555,468 @@
         </div>
     </div>
 
+    <!-- Navigation pills -->
+    <div class="container mb-3">
+        <ul class="nav nav-pills gap-2" id="mainTabControl" role="tablist" style="background-color: var(--card-bg); padding: 0.4rem; border-radius: 10px; border: 1px solid var(--card-border); max-width: fit-content;">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active fw-semibold" id="nav-web-tab" data-bs-toggle="pill" data-bs-target="#panel-web" type="button" role="tab">
+                    <i class="fa-solid fa-globe me-1"></i>Web Scanner
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link fw-semibold" id="nav-script-tab" data-bs-toggle="pill" data-bs-target="#panel-script" type="button" role="tab">
+                    <i class="fa-solid fa-shield-halved me-1"></i>Script / SRI Auditor
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link fw-semibold" id="nav-supplychain-tab" data-bs-toggle="pill" data-bs-target="#panel-supplychain" type="button" role="tab">
+                    <i class="fa-solid fa-link me-1"></i>Supply-Chain / CVE Auditor
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link fw-semibold" id="nav-copilot-tab" data-bs-toggle="pill" data-bs-target="#panel-copilot" type="button" role="tab">
+                    <i class="fa-solid fa-robot me-1"></i>AI Remediation Copilot
+                </button>
+            </li>
+        </ul>
+    </div>
+
     <!-- Main Container -->
     <div class="container pb-5">
-        <div class="row">
+        <div class="tab-content" id="mainTabContent">
             
-            <!-- Scan History Sidebar (Left) -->
-            <div class="col-lg-4 col-md-5 mb-4">
-                <div class="card p-3 h-100">
-                    <h5 class="fw-bold mb-3"><i class="fa-solid fa-clock-rotate-left me-2 text-primary"></i>Scan History</h5>
-                    <div id="historyList" class="overflow-auto" style="max-height: 550px; min-height: 250px;">
-                        <!-- Populate History Items dynamically -->
-                        <div class="text-center py-5 text-muted">
-                            <i class="fa-solid fa-spinner fa-spin fa-2x mb-2"></i>
-                            <p class="mb-0">Loading scan history...</p>
+            <!-- Panel 1: Web Scanner -->
+            <div class="tab-pane fade show active" id="panel-web" role="tabpanel">
+                <div class="row">
+                    <!-- History list -->
+                    <div class="col-lg-4 col-md-5 mb-4">
+                        <div class="card p-3 h-100">
+                            <h5 class="fw-bold mb-3"><i class="fa-solid fa-clock-rotate-left me-2 text-primary"></i>Scan History</h5>
+                            <div id="historyList" class="overflow-auto" style="max-height: 550px; min-height: 250px;">
+                                <div class="text-center py-5 text-muted">
+                                    <i class="fa-solid fa-spinner fa-spin fa-2x mb-2"></i>
+                                    <p class="mb-0">Loading scan history...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Scan Results Dashboard -->
+                    <div class="col-lg-8 col-md-7">
+                        <!-- Live Console / Progress Logs -->
+                        <!-- Live Console / Progress Logs -->
+                        <div id="consoleWrapper" class="card p-0 mb-4 d-none console-wrapper-relative overflow-hidden">
+                            <div class="console-laser-line"></div>
+                            <div class="d-flex align-items-center px-3 py-2 border-bottom" style="background-color: rgba(0, 0, 0, 0.4); border-color: var(--card-border) !important;">
+                                <div class="d-flex gap-1.5 align-items-center">
+                                    <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background-color:#ef4444;"></span>
+                                    <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background-color:#eab308; margin-left:4px;"></span>
+                                    <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background-color:#10b981; margin-left:4px;"></span>
+                                </div>
+                                <span class="text-secondary small fw-semibold font-monospace mx-auto" style="font-size:0.75rem; letter-spacing:0.5px;">terminal - scan_logs</span>
+                            </div>
+                            <div class="p-3">
+                                <h6 class="fw-bold mb-2 text-muted" style="font-size:0.9rem;"><i class="pulse-loader"></i>Scanning Progress</h6>
+                                <div id="consoleLog" class="console-log">
+                                    [INFO] Awaiting target URL initialization...
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- No Data State -->
+                        <div id="emptyState" class="card p-5 text-center my-auto">
+                            <div class="py-5">
+                                <i class="fa-solid fa-shield-halved fa-4x text-primary mb-3 opacity-50"></i>
+                                <h4 class="fw-bold">No Scan Loaded</h4>
+                                <p class="text-muted mx-auto" style="max-width: 400px;">Enter a URL in the target address bar above to initiate a live security audit, or select an item from the scan history.</p>
+                            </div>
+                        </div>
+
+                        <!-- Dashboard Results content -->
+                        <div id="scanDashboard" class="d-none">
+                            <div class="row mb-4">
+                                <div class="col-md-7 mb-3 mb-md-0">
+                                    <div class="card p-4 h-100">
+                                        <h6 class="text-uppercase text-muted fw-bold mb-2">Scan Information</h6>
+                                        <div class="d-flex align-items-center justify-content-between mb-3">
+                                            <h4 class="fw-bold text-truncate mb-0" id="reportUrl" style="max-width: 80%;">https://example.com</h4>
+                                            <button class="btn btn-outline-secondary btn-sm" id="btnRescan" title="Re-run this scan" onclick="rescanCurrentUrl()">
+                                                <i class="fa-solid fa-rotate"></i>
+                                            </button>
+                                        </div>
+                                        <div class="mt-3 text-muted small">
+                                            <div class="mb-1"><i class="fa-regular fa-calendar me-2"></i><span id="reportTime">July 3, 2026</span></div>
+                                            <div class="mb-1"><i class="fa-solid fa-server me-2"></i><span id="reportIp">192.168.1.1</span></div>
+                                            <div><i class="fa-solid fa-globe me-2"></i><span id="reportReachability">Reachable [HTTP 200]</span></div>
+                                        </div>
+                                        <div class="mt-4 pt-1 d-flex gap-2">
+                                            <button class="btn btn-primary btn-sm flex-fill" id="btnDownloadPdf">
+                                                <i class="fa-solid fa-file-pdf me-2"></i>PDF Report
+                                            </button>
+                                            <button class="btn btn-outline-secondary btn-sm flex-fill" id="btnExportJson">
+                                                <i class="fa-solid fa-file-code me-2"></i>Raw JSON
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="card p-4 h-100 text-center d-flex flex-column justify-content-center align-items-center">
+                                        <h6 class="text-uppercase text-muted fw-bold mb-3">Security Score & Risk</h6>
+                                        <div class="score-circle mb-3" id="scoreCircle" style="position: relative; display: flex; align-items: center; justify-content: center; width: 140px; height: 140px; border: none !important;">
+                                            <svg width="140" height="140" style="transform: rotate(-90deg); position: absolute; top: 0; left: 0;">
+                                                <circle cx="70" cy="70" r="60" stroke="var(--card-border)" stroke-width="8" fill="transparent" />
+                                                <circle id="scoreProgressCircle" cx="70" cy="70" r="60" stroke="var(--primary)" stroke-width="8" fill="transparent"
+                                                        stroke-dasharray="377" stroke-dashoffset="377" style="transition: stroke-dashoffset 0.8s ease-out, stroke 0.3s ease; stroke-linecap: round;" />
+                                            </svg>
+                                            <span class="score-display" id="reportScore" style="position: relative; font-size: 2.8rem; font-weight: 700; z-index: 10;">100</span>
+                                        </div>
+                                        <div>
+                                            <span class="badge px-3 py-2 fs-6 text-uppercase" id="reportRatingBadge">SAFE</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <div class="card p-3 h-100">
+                                        <h6 class="fw-bold text-muted mb-3">Severity Breakdown</h6>
+                                        <div style="position: relative; height: 180px; width: 100%;">
+                                            <canvas id="severityChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card p-3 h-100">
+                                        <h6 class="fw-bold text-muted mb-3">Host Infrastructure Details</h6>
+                                        <div class="small">
+                                            <div class="d-flex justify-content-between py-1 border-bottom border-secondary-subtle">
+                                                <span class="text-muted">SSL/TLS Scheme</span>
+                                                <span class="fw-semibold" id="hostSslScheme">N/A</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between py-1 border-bottom border-secondary-subtle">
+                                                <span class="text-muted">TLS Version</span>
+                                                <span class="fw-semibold" id="hostTlsVersion">N/A</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between py-1 border-bottom border-secondary-subtle">
+                                                <span class="text-muted">Cipher Suite</span>
+                                                <span class="fw-semibold text-truncate ms-3" style="max-width: 160px;" id="hostCipher">N/A</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between py-1 border-bottom border-secondary-subtle">
+                                                <span class="text-muted">Robots.txt</span>
+                                                <span class="fw-semibold" id="hostRobots">N/A</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between py-1">
+                                                <span class="text-muted">Server Header</span>
+                                                <span class="fw-semibold text-truncate ms-3" style="max-width: 160px;" id="hostServer">N/A</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-4" id="trendChartRow">
+                                <div class="col-md-12">
+                                    <div class="card p-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h6 class="fw-bold text-muted mb-0"><i class="fa-solid fa-chart-line me-2 text-primary"></i>Security Score Trend</h6>
+                                            <div class="btn-group btn-group-sm" role="group" aria-label="Trend Scope Toggle">
+                                                <button type="button" class="btn btn-outline-primary active" id="btnTrendCurrent" onclick="setTrendScope('current')">Current Domain</button>
+                                                <button type="button" class="btn btn-outline-primary" id="btnTrendGlobal" onclick="setTrendScope('global')">Global Trend</button>
+                                            </div>
+                                        </div>
+                                        <div style="position: relative; height: 180px; width: 100%;">
+                                            <canvas id="trendChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- findings layout -->
+                            <div class="card p-3 mb-4">
+                                <h5 class="fw-bold mb-3"><i class="fa-solid fa-bug text-danger me-2"></i>Vulnerabilities & Security Findings</h5>
+                                <ul class="nav nav-tabs mb-3" id="severityTabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="tab-all-tab" data-bs-toggle="tab" data-bs-target="#tab-all" type="button" role="tab" onclick="filterFindings('all')">
+                                            All <span class="badge bg-secondary ms-1" id="count-all">0</span>
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="tab-critical-tab" data-bs-toggle="tab" data-bs-target="#tab-critical" type="button" role="tab" onclick="filterFindings('critical')">
+                                            Critical <span class="badge bg-danger-subtle text-danger ms-1" id="count-critical">0</span>
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="tab-high-tab" data-bs-toggle="tab" data-bs-target="#tab-high" type="button" role="tab" onclick="filterFindings('high')">
+                                            High <span class="badge bg-warning-subtle text-warning ms-1" id="count-high">0</span>
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="tab-medium-tab" data-bs-toggle="tab" data-bs-target="#tab-medium" type="button" role="tab" onclick="filterFindings('medium')">
+                                            Medium <span class="badge bg-warning-subtle text-warning ms-1" id="count-medium">0</span>
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="tab-low-tab" data-bs-toggle="tab" data-bs-target="#tab-low" type="button" role="tab" onclick="filterFindings('low')">
+                                            Low <span class="badge bg-primary-subtle text-primary ms-1" id="count-low">0</span>
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="tab-info-tab" data-bs-toggle="tab" data-bs-target="#tab-info" type="button" role="tab" onclick="filterFindings('info')">
+                                            Info <span class="badge bg-success-subtle text-success ms-1" id="count-info">0</span>
+                                        </button>
+                                    </li>
+                                </ul>
+                                <div class="accordion" id="findingsAccordion"></div>
+                            </div>
+
+                            <!-- Automated Virtual Patching layout -->
+                            <div class="card p-3">
+                                <h5 class="fw-bold mb-3"><i class="fa-solid fa-code text-primary me-2"></i>Automated Virtual Patching (AVP)</h5>
+                                <p class="text-muted small">Deploy these customized infrastructure rules to resolve detected header, CORS, and cookie vulnerability classes instantly.</p>
+                                <ul class="nav nav-tabs mb-2" id="avpTabs" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="avp-nginx-tab" data-bs-toggle="tab" data-bs-target="#avp-nginx" type="button" role="tab">Nginx</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="avp-apache-tab" data-bs-toggle="tab" data-bs-target="#avp-apache" type="button" role="tab">Apache</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="avp-cf-tab" data-bs-toggle="tab" data-bs-target="#avp-cf" type="button" role="tab">Cloudflare</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="avp-ai-tab" data-bs-toggle="tab" data-bs-target="#avp-ai" type="button" role="tab"><i class="fa-solid fa-wand-magic-sparkles text-primary me-1"></i>AI Consolidated Patch</button>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" id="avpTabContent">
+                                    <div class="tab-pane fade show active" id="avp-nginx" role="tabpanel">
+                                        <pre class="bg-dark text-info p-3 rounded small" id="patchNginx" style="overflow-x: auto; font-family: 'JetBrains Mono', monospace;"></pre>
+                                    </div>
+                                    <div class="tab-pane fade" id="avp-apache" role="tabpanel">
+                                        <pre class="bg-dark text-info p-3 rounded small" id="patchApache" style="overflow-x: auto; font-family: 'JetBrains Mono', monospace;"></pre>
+                                    </div>
+                                    <div class="tab-pane fade" id="avp-cf" role="tabpanel">
+                                        <pre class="bg-dark text-info p-3 rounded small" id="patchCf" style="overflow-x: auto; font-family: 'JetBrains Mono', monospace;"></pre>
+                                    </div>
+                                    <div class="tab-pane fade" id="avp-ai" role="tabpanel">
+                                        <div class="d-flex flex-wrap align-items-center justify-content-between p-3 border-bottom gap-2 mb-3 bg-body-tertiary rounded-top">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <label class="small fw-bold text-muted mb-0">Select Target Stack:</label>
+                                                <select class="form-select form-select-sm" id="avpAiStack" style="width: 150px;">
+                                                    <option value="nginx" selected>Nginx</option>
+                                                    <option value="apache">Apache</option>
+                                                    <option value="cloudflare">Cloudflare WAF</option>
+                                                    <option value="python">Python (Flask/FastAPI)</option>
+                                                    <option value="node">Node.js (Express)</option>
+                                                    <option value="php">PHP</option>
+                                                </select>
+                                            </div>
+                                            <button class="btn btn-sm btn-primary" onclick="generateConsolidatedAIPatch()"><i class="fa-solid fa-wand-magic-sparkles me-1"></i>Generate AI Patch</button>
+                                        </div>
+                                        <div class="p-3 border rounded bg-dark-subtle d-none" id="avpAiContainer">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <span class="small text-muted fw-bold text-uppercase" id="avpAiTitle">Consolidated Patch</span>
+                                                <button class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size: 0.75rem;" onclick="copyToClipboard('avpAiCode')"><i class="fa-regular fa-copy"></i> Copy</button>
+                                            </div>
+                                            <div class="text-muted small mb-2" id="avpAiExplanation" style="line-height: 1.5;"></div>
+                                            <pre class="bg-dark text-info p-3 rounded small mb-0" id="avpAiCode" style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; overflow-x: auto; white-space: pre-wrap; max-height: 500px;"></pre>
+                                        </div>
+                                        <div class="text-center py-4 text-muted" id="avpAiPlaceholder">
+                                            <i class="fa-solid fa-wand-magic-sparkles fa-2x mb-2 text-primary opacity-50"></i>
+                                            <p class="small mb-0">Select a stack above and click "Generate AI Patch" to build a consolidated security configuration resolving all scan findings.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Dashboard Content Area (Right) -->
-            <div class="col-lg-8 col-md-7">
-                
-                <!-- Live Console / Progress Logs -->
-                <div id="consoleWrapper" class="card p-3 mb-4 d-none console-wrapper-relative">
-                    <div class="console-laser-line"></div>
-                    <h6 class="fw-bold mb-2 text-muted"><i class="pulse-loader"></i>Scanning Progress</h6>
-                    <div id="consoleLog" class="console-log">
-                        [INFO] Awaiting target URL initialization...
+
+
+            <!-- Panel 2.5: Magecart & Script Auditor -->
+            <div class="tab-pane fade" id="panel-script" role="tabpanel">
+                <div class="row">
+                    <!-- Form input card -->
+                    <div class="col-md-5 mb-4">
+                        <div class="card p-3 h-100">
+                            <h5 class="fw-bold mb-3"><i class="fa-solid fa-shield-halved text-primary me-2"></i>Script & SRI Auditor</h5>
+                            <p class="text-muted small">Analyze all client-side JavaScript tags and stylesheets embedded in a website. WebGuard checks for Subresource Integrity (SRI) hashes, verifies SRI cryptographic signatures, and hashes script content for drift detection.</p>
+                            <form id="scriptAuditForm" onsubmit="event.preventDefault(); runScriptScan();" class="mt-2">
+                                <div class="mb-3">
+                                    <label for="scriptTargetUrl" class="form-label small fw-bold">Target Website URL</label>
+                                    <input type="url" id="scriptTargetUrl" class="form-control" placeholder="https://example.com" required>
+                                </div>
+                                <button class="btn btn-primary w-100" type="submit" id="btnScriptScan">
+                                    <i class="fa-solid fa-magnifying-glass me-2"></i>Start Script Audit
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- Audit results card -->
+                    <div class="col-md-7">
+                        <div class="card p-3 h-100">
+                            <div id="scriptEmptyState" class="text-center py-5 text-muted">
+                                <i class="fa-solid fa-code-compare fa-3x mb-3 text-secondary"></i>
+                                <h6 class="fw-semibold">No Script Audit Performed Yet</h6>
+                                <p class="small mb-0">Enter a website URL on the left panel to scan its client-side JavaScript tags.</p>
+                            </div>
+                            <div id="scriptResultsState" class="d-none">
+                                <h5 class="fw-bold mb-3 d-flex align-items-center justify-content-between">
+                                    <span>Audit Report for: <span id="scriptAuditedUrl" class="text-muted small font-monospace"></span></span>
+                                    <span id="scriptScanStatus" class="fw-bold text-success">Success</span>
+                                </h5>
+                                <div class="card p-3 mb-3" style="background-color: rgba(79, 70, 229, 0.03);">
+                                    <div class="row text-center">
+                                        <div class="col-6 border-end">
+                                            <div class="small text-muted mb-1">Integrity Status</div>
+                                            <div id="scriptThreatStatus" class="fw-bold text-success"><i class="fa-solid fa-circle-check me-1"></i>CLEAN</div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="small text-muted mb-1">Script Vulnerabilities</div>
+                                            <div id="scriptVulnerabilitiesCount" class="fw-bold text-main">0</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card p-3">
+                                    <h6 class="fw-bold text-muted mb-3">Script Findings & Integrity Violations</h6>
+                                    <div class="accordion" id="scriptFindingsAccordion"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <!-- No Data State -->
-                <div id="emptyState" class="card p-5 text-center my-auto">
-                    <div class="py-5">
-                        <i class="fa-solid fa-shield-halved fa-4x text-primary mb-3 opacity-50"></i>
-                        <h4 class="fw-bold">No Scan Loaded</h4>
-                        <p class="text-muted mx-auto" style="max-width: 400px;">Enter a URL in the target address bar above to initiate a live security audit, or select an item from the scan history.</p>
-                    </div>
-                </div>
-
-                <!-- Scan Results Dashboard -->
-                <div id="scanDashboard" class="d-none">
-                    
-                    <!-- Core Summary Cards -->
-                    <div class="row mb-4">
-                        <div class="col-md-7 mb-3 mb-md-0">
-                            <div class="card p-4 h-100">
-                                <h6 class="text-uppercase text-muted fw-bold mb-2">Scan Information</h6>
-                                <h4 class="fw-bold text-truncate" id="reportUrl">https://example.com</h4>
-                                <div class="mt-3 text-muted small">
-                                    <div class="mb-1"><i class="fa-regular fa-calendar me-2"></i><span id="reportTime">July 3, 2026</span></div>
-                                    <div class="mb-1"><i class="fa-solid fa-server me-2"></i><span id="reportIp">192.168.1.1</span></div>
-                                    <div><i class="fa-solid fa-globe me-2"></i><span id="reportReachability">Reachable [HTTP 200]</span></div>
-                                </div>
-                                <div class="mt-4 pt-1 d-flex gap-2">
-                                    <button class="btn btn-primary btn-sm flex-fill" id="btnDownloadPdf">
-                                        <i class="fa-solid fa-file-pdf me-2"></i>PDF Report
-                                    </button>
-                                    <button class="btn btn-outline-secondary btn-sm flex-fill" id="btnExportJson">
-                                        <i class="fa-solid fa-file-code me-2"></i>Raw JSON
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="card p-4 h-100 text-center d-flex flex-column justify-content-center align-items-center">
-                                <h6 class="text-uppercase text-muted fw-bold mb-3">Security Risk Level</h6>
-                                <div class="mb-3" id="ratingIconContainer" style="font-size: 4.5rem; transition: all 0.3s ease;">
-                                    <i class="fa-solid fa-shield"></i>
-                                </div>
-                                <div>
-                                    <span class="badge px-3 py-2 fs-6 text-uppercase" id="reportRatingBadge">SAFE</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Visual charts and metrics -->
-                    <div class="row mb-4">
-                        <div class="col-md-6 mb-3 mb-md-0">
-                            <div class="card p-3 h-100">
-                                <h6 class="fw-bold text-muted mb-3">Severity Breakdown</h6>
-                                <div style="position: relative; height: 180px; width: 100%;">
-                                    <canvas id="severityChart"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card p-3 h-100">
-                                <h6 class="fw-bold text-muted mb-3">Host Infrastructure Details</h6>
-                                <div class="small">
-                                    <div class="d-flex justify-content-between py-1 border-bottom border-secondary-subtle">
-                                        <span class="text-muted">SSL/TLS Scheme</span>
-                                        <span class="fw-semibold" id="hostSslScheme">N/A</span>
-                                    </div>
-                                    <div class="d-flex justify-content-between py-1 border-bottom border-secondary-subtle">
-                                        <span class="text-muted">TLS Version</span>
-                                        <span class="fw-semibold" id="hostTlsVersion">N/A</span>
-                                    </div>
-                                    <div class="d-flex justify-content-between py-1 border-bottom border-secondary-subtle">
-                                        <span class="text-muted">Cipher Suite</span>
-                                        <span class="fw-semibold text-truncate ms-3" style="max-width: 160px;" id="hostCipher">N/A</span>
-                                    </div>
-                                    <div class="d-flex justify-content-between py-1 border-bottom border-secondary-subtle">
-                                        <span class="text-muted">Robots.txt</span>
-                                        <span class="fw-semibold" id="hostRobots">N/A</span>
-                                    </div>
-                                    <div class="d-flex justify-content-between py-1">
-                                        <span class="text-muted">Server Header</span>
-                                        <span class="fw-semibold text-truncate ms-3" style="max-width: 160px;" id="hostServer">N/A</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Findings Accordion and Filter Tabs -->
-                    <div class="card p-3">
-                        <h5 class="fw-bold mb-3"><i class="fa-solid fa-bug text-danger me-2"></i>Vulnerabilities & Security Findings</h5>
-                        
-                        <!-- Filter Tabs -->
-                        <ul class="nav nav-tabs mb-3" id="severityTabs" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="tab-all-tab" data-bs-toggle="tab" data-bs-target="#tab-all" type="button" role="tab" onclick="filterFindings('all')">
-                                    All <span class="badge bg-secondary ms-1" id="count-all">0</span>
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tab-critical-tab" data-bs-toggle="tab" data-bs-target="#tab-critical" type="button" role="tab" onclick="filterFindings('critical')">
-                                    Critical <span class="badge bg-danger-subtle text-danger ms-1" id="count-critical">0</span>
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tab-high-tab" data-bs-toggle="tab" data-bs-target="#tab-high" type="button" role="tab" onclick="filterFindings('high')">
-                                    High <span class="badge bg-warning-subtle text-warning ms-1" id="count-high">0</span>
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tab-medium-tab" data-bs-toggle="tab" data-bs-target="#tab-medium" type="button" role="tab" onclick="filterFindings('medium')">
-                                    Medium <span class="badge bg-warning-subtle text-warning ms-1" id="count-medium">0</span>
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tab-low-tab" data-bs-toggle="tab" data-bs-target="#tab-low" type="button" role="tab" onclick="filterFindings('low')">
-                                    Low <span class="badge bg-primary-subtle text-primary ms-1" id="count-low">0</span>
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="tab-info-tab" data-bs-toggle="tab" data-bs-target="#tab-info" type="button" role="tab" onclick="filterFindings('info')">
-                                    Info <span class="badge bg-success-subtle text-success ms-1" id="count-info">0</span>
-                                </button>
-                            </li>
-                        </ul>
-
-                        <!-- Accordion List -->
-                        <div class="accordion" id="findingsAccordion">
-                            <!-- Populate dynamically -->
-                        </div>
-                    </div>
-
-                </div>
-
             </div>
+
+            <!-- Panel 2.7: Supply-Chain / CVE Auditor -->
+            <div class="tab-pane fade" id="panel-supplychain" role="tabpanel">
+                <div class="row">
+                    <!-- Form input card -->
+                    <div class="col-md-5 mb-4">
+                        <div class="card p-3 h-100">
+                            <h5 class="fw-bold mb-3"><i class="fa-solid fa-link text-primary me-2"></i>Supply-Chain Analysis</h5>
+                            <p class="text-muted small">Automatically fingerprint all third-party JavaScript and CSS libraries loaded on a target page, identify their exact versions using CDN URL patterns and content-based regex, and cross-reference them in real time against the <strong>OSV.dev</strong> vulnerability database for known CVEs.</p>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Target URL</label>
+                                <input type="url" class="form-control" id="scTargetUrl" placeholder="https://example.com" required>
+                            </div>
+                            <button class="btn btn-primary w-100" id="btnRunSupplyChain" onclick="runSupplyChainScan()">
+                                <i class="fa-solid fa-magnifying-glass me-1"></i>Analyze Supply Chain
+                            </button>
+                            <!-- Summary stats -->
+                            <div id="scSummaryBox" class="d-none mt-3">
+                                <div class="row g-2 text-center">
+                                    <div class="col-4">
+                                        <div class="card p-2" style="background:rgba(79,70,229,0.08);">
+                                            <div class="small text-muted">Components</div>
+                                            <div id="scTotalComponents" class="fw-bold text-main fs-5">0</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="card p-2" style="background:rgba(239,68,68,0.08);">
+                                            <div class="small text-muted">Vulnerable</div>
+                                            <div id="scVulnComponents" class="fw-bold text-danger fs-5">0</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="card p-2" style="background:rgba(245,158,11,0.08);">
+                                            <div class="small text-muted">CVEs Found</div>
+                                            <div id="scTotalCves" class="fw-bold text-warning fs-5">0</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Results card -->
+                    <div class="col-md-7 mb-4">
+                        <div class="card p-3 h-100">
+                            <ul class="nav nav-tabs mb-3" role="tablist">
+                                <li class="nav-item"><button class="nav-link active fw-semibold" data-bs-toggle="tab" data-bs-target="#sc-sbom-tab" type="button" role="tab"><i class="fa-solid fa-list-check me-1"></i>SBOM Inventory</button></li>
+                                <li class="nav-item"><button class="nav-link fw-semibold" data-bs-toggle="tab" data-bs-target="#sc-cve-tab" type="button" role="tab"><i class="fa-solid fa-bug me-1"></i>CVE Findings</button></li>
+                            </ul>
+                            <div class="tab-content">
+                                <!-- SBOM Tab -->
+                                <div class="tab-pane fade show active" id="sc-sbom-tab" role="tabpanel">
+                                    <div id="scSbomPlaceholder" class="text-center text-muted py-5">
+                                        <i class="fa-solid fa-cubes fa-3x mb-3 opacity-25"></i>
+                                        <p>Run a supply-chain scan to discover all third-party components and their versions.</p>
+                                    </div>
+                                    <div id="scSbomContent" class="d-none">
+                                        <div class="table-responsive" style="max-height:420px; overflow-y:auto;">
+                                            <table class="table table-sm table-hover align-middle mb-0" id="scSbomTable">
+                                                <thead class="sticky-top" style="background-color: var(--card-bg);">
+                                                    <tr>
+                                                        <th>Library</th>
+                                                        <th>Version</th>
+                                                        <th>Type</th>
+                                                        <th>CVEs</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="scSbomTableBody"></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- CVE Findings Tab -->
+                                <div class="tab-pane fade" id="sc-cve-tab" role="tabpanel">
+                                    <div id="scCvePlaceholder" class="text-center text-muted py-5">
+                                        <i class="fa-solid fa-shield-virus fa-3x mb-3 opacity-25"></i>
+                                        <p>Vulnerability details will appear here after scanning.</p>
+                                    </div>
+                                    <div id="scCveContent" class="d-none">
+                                        <div class="accordion" id="scCveAccordion" style="max-height:420px; overflow-y:auto;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel 3: AI Remediation Copilot -->
+            <div class="tab-pane fade" id="panel-copilot" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card p-3 h-100">
+                            <h5 class="fw-bold mb-3"><i class="fa-solid fa-robot text-primary me-2"></i>Select Context Scan</h5>
+                            <p class="text-muted small">Select a target history scan to load as context for the AI Copilot. The AI agent will explain vulnerabilities and write custom patches for this target.</p>
+                            <select class="form-select mb-3" id="copilotScanSelector" onchange="loadCopilotContext()">
+                                <option value="" disabled selected>Select scan history...</option>
+                            </select>
+                            <div id="copilotReportSummary" class="d-none p-3 rounded" style="background-color: rgba(79, 70, 229, 0.05);">
+                                <h6 class="fw-bold text-truncate mb-1" id="copilotSummaryUrl">https://example.com</h6>
+                                <div class="small text-muted mb-2" id="copilotSummaryTime">July 3, 2026</div>
+                                <span class="badge" id="copilotSummaryRating">SAFE</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card p-4 h-100">
+                            <h5 class="fw-bold mb-3"><i class="fa-solid fa-comments me-2 text-primary"></i>Remediation Assistant</h5>
+                            <div class="chat-box mb-3" id="chatBox">
+                                <div class="chat-message bot">
+                                    Hello! Select a scan report on the left panel. I can explain the vulnerabilities found and provide custom patch configs (Nginx, Apache, PHP, Python) for it!
+                                </div>
+                            </div>
+                            <form id="chatForm" class="input-group" onsubmit="event.preventDefault(); sendChatQuery();">
+                                <input type="text" id="chatInput" class="form-control" placeholder="Ask about this scan (e.g. 'How do I fix CORS in Apache?')" disabled required>
+                                <button type="submit" id="btnSendChat" class="btn btn-primary" disabled>
+                                    <i class="fa-solid fa-paper-plane"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <!-- Bootstrap 5 Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Chart.js for beautiful graphs -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <script>
@@ -618,9 +1024,10 @@
         let scanHistoryData = [];
         let activeFindings = [];
         let severityChartInstance = null;
+        let trendChartInstance = null;
         let activeCounts = null;
+        let trendScope = 'current';
 
-        // Theme Toggle Functions
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
@@ -629,9 +1036,12 @@
             localStorage.setItem('theme', newTheme);
             updateThemeButton(newTheme);
             
-            // Redraw chart to update legend label colors and slice borders
             if (activeCounts) {
                 renderSeverityChart(activeCounts);
+            }
+            const currentUrl = document.getElementById("reportUrl")?.innerText;
+            if (currentUrl && currentUrl !== "https://example.com") {
+                updateTrendChart(currentUrl);
             }
         }
 
@@ -648,9 +1058,7 @@
             }
         }
 
-        // Initialize App
         document.addEventListener("DOMContentLoaded", () => {
-            // Load saved theme (default to light)
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
             updateThemeButton(savedTheme);
@@ -660,6 +1068,16 @@
             document.getElementById("scanForm").addEventListener("submit", (e) => {
                 e.preventDefault();
                 runScan();
+            });
+
+            document.getElementById("apiSpecForm").addEventListener("submit", (e) => {
+                e.preventDefault();
+                runApiScan();
+            });
+
+            document.getElementById("chatForm").addEventListener("submit", (e) => {
+                e.preventDefault();
+                sendChatQuery();
             });
 
             document.getElementById("btnDownloadPdf").addEventListener("click", () => {
@@ -674,7 +1092,6 @@
                 }
             });
 
-            // Dynamic system health check ping
             setInterval(async () => {
                 const badge = document.getElementById("systemStatusBadge");
                 if (!badge) return;
@@ -693,7 +1110,7 @@
             }, 10000);
         });
 
-        // Load Scan History List
+        // Load History list and sync with AI Copilot dropdown
         async function loadHistory() {
             try {
                 const response = await fetch("/api/history");
@@ -703,6 +1120,9 @@
                 const historyList = document.getElementById("historyList");
                 historyList.innerHTML = "";
                 
+                const copilotSelector = document.getElementById("copilotScanSelector");
+                copilotSelector.innerHTML = '<option value="" disabled selected>Select scan history...</option>';
+                
                 if (data.length === 0) {
                     historyList.innerHTML = `<div class="text-center py-5 text-muted"><p>No previous scans found</p></div>`;
                     return;
@@ -711,23 +1131,31 @@
                 data.forEach(item => {
                     const dt = new Date(item.timestamp);
                     const formattedDate = dt.toLocaleDateString() + " " + dt.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                    
-                    const ratingColor = getRiskRatingBadgeColor(item.risk_rating);
                     const ratingClass = `badge-${item.risk_rating.toLowerCase()}`;
                     
+                    // Sidebar list
                     const itemDiv = document.createElement("div");
                     itemDiv.className = `p-3 rounded scan-history-item border-bottom border-secondary-subtle d-flex justify-content-between align-items-center ${currentScanId === item.id ? 'active' : ''}`;
                     itemDiv.onclick = () => selectHistoryItem(item.id);
                     itemDiv.innerHTML = `
-                        <div class="text-truncate me-2" style="max-width: 70%;">
+                        <div class="text-truncate me-2" style="max-width: 60%;">
                             <div class="fw-semibold text-truncate" style="font-size: 0.95rem;">${item.url}</div>
                             <div class="small text-muted" style="font-size: 0.75rem;">${formattedDate}</div>
                         </div>
-                        <div class="text-end">
+                        <div class="text-end d-flex align-items-center gap-2">
                             <span class="badge ${ratingClass} text-uppercase px-2 py-1" style="font-size: 0.7rem;">${item.risk_rating}</span>
+                            <button class="btn btn-sm btn-outline-danger border-0 p-1" onclick="deleteHistoryItem(event, ${item.id})" title="Delete scan">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
                         </div>
                     `;
                     historyList.appendChild(itemDiv);
+
+                    // Sync selector
+                    const opt = document.createElement("option");
+                    opt.value = item.id;
+                    opt.text = `${item.url} (${formattedDate})`;
+                    copilotSelector.appendChild(opt);
                 });
             } catch (err) {
                 console.error("Error loading history:", err);
@@ -735,23 +1163,14 @@
             }
         }
 
-        // Click History Item
         async function selectHistoryItem(id) {
             currentScanId = id;
-            
-            // Mark active sidebar
-            const items = document.querySelectorAll(".scan-history-item");
-            items.forEach(el => el.classList.remove("active"));
-            
-            // Reload list to ensure active highlight remains
             loadHistory();
             
-            // Hide empty state and show dashboard
             document.getElementById("emptyState").classList.add("d-none");
             document.getElementById("scanDashboard").classList.remove("d-none");
             document.getElementById("consoleWrapper").classList.add("d-none");
             
-            // Fetch Details
             try {
                 const response = await fetch(`/api/scan/${id}`);
                 if (!response.ok) throw new Error("Failed to load details");
@@ -763,13 +1182,41 @@
             }
         }
 
-        // Trigger New Scan
+        async function deleteHistoryItem(event, id) {
+            if (event) {
+                event.stopPropagation();
+            }
+            if (!confirm("Are you sure you want to delete this scan from history?")) {
+                return;
+            }
+            try {
+                const response = await fetch(`/api/scan/${id}`, {
+                    method: 'DELETE'
+                });
+                const resData = await response.json();
+                if (resData.status === "Success") {
+                    if (currentScanId === id) {
+                        currentScanId = null;
+                        document.getElementById("emptyState").classList.remove("d-none");
+                        document.getElementById("scanDashboard").classList.add("d-none");
+                        document.getElementById("consoleWrapper").classList.add("d-none");
+                    }
+                    loadHistory();
+                } else {
+                    alert("Failed to delete scan: " + resData.error);
+                }
+            } catch (err) {
+                console.error("Error deleting scan:", err);
+                alert("Failed to delete scan");
+            }
+        }
+
+        // Trigger scan
         async function runScan() {
             const urlInput = document.getElementById("targetUrl");
             const url = urlInput.value.trim();
             if (!url) return;
             
-            // Show console progress logs
             document.getElementById("emptyState").classList.add("d-none");
             document.getElementById("scanDashboard").classList.add("d-none");
             
@@ -777,7 +1224,6 @@
             const consoleLog = document.getElementById("consoleLog");
             consoleWrapper.classList.remove("d-none");
             
-            // Set buttons state
             const btnScan = document.getElementById("btnScan");
             btnScan.disabled = true;
             btnScan.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-2"></i>Scanning...`;
@@ -785,47 +1231,24 @@
             consoleLog.innerHTML = "";
             writeLog("[INFO] Resolving domain name and checking reachability...");
             
-            let logTimer1 = setTimeout(() => writeLog("[INFO] Initializing WebGuard Unified Scanner Engine..."), 800);
-            let logTimer2 = setTimeout(() => writeLog("[INFO] Phase 1: Analysing HTTP Response Headers for security flags..."), 1500);
-            let logTimer3 = setTimeout(() => writeLog("[INFO] Phase 2: Probing SSL/TLS certificate chain & security attributes..."), 2500);
-            let logTimer4 = setTimeout(() => writeLog("[INFO] Phase 3: Inspecting cookie security settings (HttpOnly, Secure)..."), 3800);
-            let logTimer5 = setTimeout(() => writeLog("[INFO] Phase 4: Reading robots.txt configurations and scanning HTTP Methods..."), 5000);
-            let logTimer6 = setTimeout(() => writeLog("[INFO] Phase 5: Detecting exposure of sensitive files (.env, .git, backups)..."), 6200);
-            let logTimer7 = setTimeout(() => writeLog("[INFO] Compiling final report metrics & calculating risk vectors..."), 7500);
+            let logTimer1 = setTimeout(() => writeLog("[INFO] Initializing WebGuard Parallel Scanning Engine..."), 200);
+            let logTimer2 = setTimeout(() => writeLog("[INFO] Launching concurrent threads: Headers, SSL/TLS, Cookies, Info, Sensitive Files, SRI, & Supply-Chain..."), 400);
+            let logTimer3 = setTimeout(() => writeLog("[INFO] Cross-referencing third-party packages against OSV.dev CVE database..."), 600);
+            let logTimer4 = setTimeout(() => writeLog("[INFO] Consolidating security score metrics and generating virtual patch rules..."), 800);
             
             try {
-                const response = await fetch(`/api/scan?url=${encodeURIComponent(url)}`, {
+                const profile = document.getElementById("scanProfile").value;
+                const response = await fetch(`/api/scan?url=${encodeURIComponent(url)}&profile=${profile}`, {
                     method: "POST"
                 });
                 
-                // Clear simulated timers
                 clearTimeout(logTimer1);
                 clearTimeout(logTimer2);
                 clearTimeout(logTimer3);
                 clearTimeout(logTimer4);
-                clearTimeout(logTimer5);
-                clearTimeout(logTimer6);
-                clearTimeout(logTimer7);
                 
-                if (!response.ok) {
-                    throw new Error("Scan API returned error");
-                }
-                
+                if (!response.ok) throw new Error("Scan API error");
                 const report = await response.json();
-                
-                if (report.status === "Invalid" || report.status === "Blocked" || report.status === "DNS Failure") {
-                    writeLog(`[ERROR] Scan stopped. URL is unsafe, blocked by SSRF filters, or host could not be resolved. Details: ${report.error || 'Check failed'}`);
-                    btnScan.disabled = false;
-                    btnScan.innerHTML = `<i class="fa-solid fa-circle-play me-2"></i>Run Scan`;
-                    return;
-                }
-                
-                if (report.reachable === false) {
-                    writeLog(`[ERROR] Target website is unreachable or returned client/server errors. Verify connection and try again.`);
-                    btnScan.disabled = false;
-                    btnScan.innerHTML = `<i class="fa-solid fa-circle-play me-2"></i>Run Scan`;
-                    return;
-                }
                 
                 writeLog("[SUCCESS] Scanner Engine finished. Recording metrics in database.");
                 currentScanId = report.id;
@@ -847,7 +1270,14 @@
             }
         }
 
-        // Helper to write console logs
+        function rescanCurrentUrl() {
+            const url = document.getElementById("reportUrl").innerText;
+            if (url && url !== "https://example.com") {
+                document.getElementById("targetUrl").value = url;
+                runScan();
+            }
+        }
+
         function writeLog(text) {
             const consoleLog = document.getElementById("consoleLog");
             const time = new Date().toLocaleTimeString();
@@ -855,11 +1285,8 @@
             consoleLog.scrollTop = consoleLog.scrollHeight;
         }
 
-        // Populate Dashboard UI Elements
         function populateDashboard(report) {
             document.getElementById("reportUrl").innerText = report.url;
-            
-            // Format timestamp
             const dt = new Date(report.timestamp);
             document.getElementById("reportTime").innerText = dt.toLocaleDateString() + " " + dt.toLocaleTimeString();
             
@@ -870,46 +1297,53 @@
             const ssl = report.ssl_tls || {};
             
             document.getElementById("reportIp").innerText = dns.ip_address || "N/A";
-            document.getElementById("reportReachability").innerText = `Reachable [HTTP ${reach.status_code || 'N/A'}]`;
             
-            // Rating & Dynamic Icon
+            if (report.reachable) {
+                document.getElementById("reportReachability").innerText = `Reachable [HTTP ${reach.status_code || 'N/A'}]`;
+            } else {
+                document.getElementById("reportReachability").innerText = `Unreachable / Failed (${report.status || 'Offline'})`;
+            }
+            
             const rating = report.risk_rating || "Safe";
-            
             const ratingBadge = document.getElementById("reportRatingBadge");
             ratingBadge.className = "badge px-3 py-2 fs-6 text-uppercase " + getRatingBadgeClass(rating);
             ratingBadge.innerText = rating;
 
-            const iconContainer = document.getElementById("ratingIconContainer");
-            if (iconContainer) {
-                let iconHtml = "";
-                let colorHex = "#64748b";
+            const score = report.security_score !== undefined ? report.security_score : 100;
+            document.getElementById("reportScore").innerText = score;
+            
+            const scoreProgressCircle = document.getElementById("scoreProgressCircle");
+            if (scoreProgressCircle) {
+                const circumference = 377;
+                const offset = circumference - (score / 100) * circumference;
+                scoreProgressCircle.style.strokeDashoffset = offset;
                 
-                const lowerRating = rating.toLowerCase();
-                if (lowerRating === "safe") {
-                    iconHtml = '<i class="fa-solid fa-circle-check"></i>';
-                    colorHex = "var(--info)";
-                } else if (lowerRating === "low") {
-                    iconHtml = '<i class="fa-solid fa-shield"></i>';
-                    colorHex = "var(--low)";
-                } else if (lowerRating === "medium") {
-                    iconHtml = '<i class="fa-solid fa-shield-halved"></i>';
-                    colorHex = "var(--medium)";
-                } else if (lowerRating === "high") {
-                    iconHtml = '<i class="fa-solid fa-triangle-exclamation"></i>';
-                    colorHex = "var(--high)";
-                } else if (lowerRating === "critical") {
-                    iconHtml = '<i class="fa-solid fa-radiation"></i>';
-                    colorHex = "var(--critical)";
-                } else {
-                    iconHtml = '<i class="fa-solid fa-shield"></i>';
-                    colorHex = "var(--text-muted)";
+                let strokeCol = "var(--info)";
+                let glowCol = "rgba(52, 211, 153, 0.25)";
+                let dropGlow = "rgba(52, 211, 153, 0.6)";
+                
+                if (score < 50) {
+                    strokeCol = "var(--critical)";
+                    glowCol = "rgba(244, 63, 94, 0.25)";
+                    dropGlow = "rgba(244, 63, 94, 0.6)";
+                } else if (score < 80) {
+                    strokeCol = "var(--high)";
+                    glowCol = "rgba(249, 115, 22, 0.25)";
+                    dropGlow = "rgba(249, 115, 22, 0.6)";
+                } else if (score < 95) {
+                    strokeCol = "var(--medium)";
+                    glowCol = "rgba(251, 191, 36, 0.25)";
+                    dropGlow = "rgba(251, 191, 36, 0.6)";
                 }
+                scoreProgressCircle.style.stroke = strokeCol;
+                scoreProgressCircle.style.filter = `drop-shadow(0 0 6px ${dropGlow})`;
                 
-                iconContainer.innerHTML = iconHtml;
-                iconContainer.style.color = colorHex;
+                const scoreCircle = document.getElementById("scoreCircle");
+                if (scoreCircle) {
+                    scoreCircle.style.boxShadow = `inset 0 0 20px ${glowCol}, 0 0 20px ${glowCol}`;
+                }
             }
             
-            // Infrastructure card
             document.getElementById("hostSslScheme").innerText = trans.is_https ? "HTTPS" : "HTTP Only";
             document.getElementById("hostTlsVersion").innerText = ssl.version || "N/A";
             document.getElementById("hostCipher").innerText = ssl.cipher_suite || "N/A";
@@ -918,7 +1352,6 @@
             document.getElementById("hostServer").innerText = reach.server || "Not Disclosed";
             document.getElementById("hostServer").title = reach.server || "Not Disclosed";
             
-            // Count Badges
             const counts = report.severity_counts || {critical:0, high:0, medium:0, low:0, info:0};
             document.getElementById("count-all").innerText = report.total_findings || 0;
             document.getElementById("count-critical").innerText = counts.critical || 0;
@@ -927,26 +1360,26 @@
             document.getElementById("count-low").innerText = counts.low || 0;
             document.getElementById("count-info").innerText = counts.info || 0;
             
-            // Update Findings
             activeFindings = report.findings || [];
             
-            // Reset filters to 'all' tab
             const triggerEl = document.querySelector('#severityTabs button[data-bs-target="#tab-all"]');
             bootstrap.Tab.getOrCreateInstance(triggerEl).show();
             filterFindings('all');
             
-            // Render Chart
             activeCounts = counts;
             renderSeverityChart(counts);
+            updateTrendChart(report.url);
+
+            // Populate Virtual Patches
+            const vPatches = report.virtual_patches || {nginx: "", apache: "", cloudflare: ""};
+            document.getElementById("patchNginx").innerText = vPatches.nginx || "# No Nginx mitigations generated.";
+            document.getElementById("patchApache").innerText = vPatches.apache || "# No Apache mitigations generated.";
+            document.getElementById("patchCf").innerText = vPatches.cloudflare || "# No Cloudflare WAF mitigations generated.";
         }
 
-        // Render doughnut chart for severities
         function renderSeverityChart(counts) {
             const ctx = document.getElementById('severityChart').getContext('2d');
-            
-            if (severityChartInstance) {
-                severityChartInstance.destroy();
-            }
+            if (severityChartInstance) severityChartInstance.destroy();
             
             const dataValues = [
                 counts.critical || 0,
@@ -956,39 +1389,29 @@
                 counts.info || 0
             ];
             
-            // If total findings is 0, render a clean green chart
             const total = dataValues.reduce((a, b) => a + b, 0);
-            
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
             const borderCol = isDark ? '#111827' : '#ffffff';
             const legendCol = isDark ? '#f3f4f6' : '#0f172a';
             
-            const chartData = {
-                labels: ['Critical', 'High', 'Medium', 'Low', 'Info'],
-                datasets: [{
-                    data: total === 0 ? [1] : dataValues,
-                    backgroundColor: total === 0 ? ['#10b981'] : ['#ef4444', '#f97316', '#eab308', '#3b82f6', '#10b981'],
-                    borderColor: borderCol,
-                    borderWidth: 2,
-                    hoverOffset: 4
-                }]
-            };
-
             severityChartInstance = new Chart(ctx, {
                 type: 'doughnut',
-                data: chartData,
+                data: {
+                    labels: ['Critical', 'High', 'Medium', 'Low', 'Info'],
+                    datasets: [{
+                        data: total === 0 ? [1] : dataValues,
+                        backgroundColor: total === 0 ? ['#10b981'] : ['#ef4444', '#f97316', '#eab308', '#3b82f6', '#10b981'],
+                        borderColor: borderCol,
+                        borderWidth: 2
+                    }]
+                },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
                             position: 'right',
-                            labels: {
-                                color: legendCol,
-                                font: {
-                                    family: 'Inter'
-                                }
-                            }
+                            labels: { color: legendCol }
                         }
                     },
                     cutout: '65%'
@@ -996,7 +1419,92 @@
             });
         }
 
-        // Filter and display findings in accordion
+        function setTrendScope(scope) {
+            trendScope = scope;
+            
+            // Toggle active classes
+            const btnCurrent = document.getElementById("btnTrendCurrent");
+            const btnGlobal = document.getElementById("btnTrendGlobal");
+            if (btnCurrent && btnGlobal) {
+                if (scope === 'current') {
+                    btnCurrent.classList.add("active");
+                    btnGlobal.classList.remove("active");
+                } else {
+                    btnCurrent.classList.remove("active");
+                    btnGlobal.classList.add("active");
+                }
+            }
+            
+            const currentUrl = document.getElementById("reportUrl")?.innerText;
+            if (currentUrl && currentUrl !== "https://example.com") {
+                updateTrendChart(currentUrl);
+            } else {
+                updateTrendChart(null);
+            }
+        }
+
+        function updateTrendChart(url) {
+            const ctx = document.getElementById('trendChart')?.getContext('2d');
+            if (!ctx) return;
+            if (trendChartInstance) trendChartInstance.destroy();
+            
+            let history = [];
+            if (trendScope === 'current') {
+                history = scanHistoryData.filter(item => item.url === url).reverse();
+            } else {
+                history = [...scanHistoryData].reverse();
+            }
+            
+            const labels = history.map(item => {
+                const dt = new Date(item.timestamp);
+                return dt.toLocaleDateString() + " " + dt.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            });
+            const scores = history.map(item => item.security_score);
+            
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const textCol = isDark ? '#f3f4f6' : '#0f172a';
+            const gridCol = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+            
+            trendChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels.length > 0 ? labels : ["No History"],
+                    datasets: [{
+                        label: 'Security Score',
+                        data: scores.length > 0 ? scores : [100],
+                        borderColor: 'var(--primary)',
+                        backgroundColor: 'rgba(129, 140, 248, 0.1)',
+                        tension: 0.25,
+                        fill: true,
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const index = context.dataIndex;
+                                    const item = history[index];
+                                    if (item) {
+                                        return `${item.url}: ${item.security_score}`;
+                                    }
+                                    return `Security Score: ${context.parsed.y}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { min: 0, max: 100, grid: { color: gridCol }, ticks: { color: textCol } },
+                        x: { grid: { display: false }, ticks: { color: textCol, maxRotation: 45 } }
+                    }
+                }
+            });
+        }
+
         function filterFindings(severity) {
             const container = document.getElementById("findingsAccordion");
             container.innerHTML = "";
@@ -1015,7 +1523,6 @@
                 return;
             }
             
-            // Sort by severity priority: Critical -> High -> Medium -> Low -> Info
             const sevPriority = {critical: 0, high: 1, medium: 2, low: 3, info: 4};
             const sorted = [...filtered].sort((a, b) => sevPriority[a.severity.toLowerCase()] - sevPriority[b.severity.toLowerCase()]);
             
@@ -1023,12 +1530,13 @@
                 const badgeClass = `badge-${finding.severity.toLowerCase()}`;
                 const collapsesId = `collapse-finding-${index}`;
                 const headingId = `heading-finding-${index}`;
+                const escapedCheck = finding.check.replace(/'/g, "\\'");
                 
                 const card = document.createElement("div");
                 card.className = "accordion-item";
                 card.innerHTML = `
                     <h2 class="accordion-header" id="${headingId}">
-                        <button class="accordion-button collapsed d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#${collapsesId}" aria-expanded="false" aria-controls="${collapsesId}">
+                        <button class="accordion-button collapsed d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#${collapsesId}">
                             <div class="text-truncate me-2" style="max-width: 80%;">
                                 <i class="fa-solid fa-triangle-exclamation text-warning me-2"></i>
                                 <span>${finding.check}</span>
@@ -1036,11 +1544,11 @@
                             <span class="badge ${badgeClass} text-uppercase px-2 py-1 me-3" style="font-size: 0.75rem;">${finding.severity}</span>
                         </button>
                     </h2>
-                    <div id="${collapsesId}" class="accordion-collapse collapse" aria-labelledby="${headingId}" data-bs-parent="#findingsAccordion">
+                    <div id="${collapsesId}" class="accordion-collapse collapse" data-bs-parent="#findingsAccordion">
                         <div class="accordion-body">
                             <div class="mb-3">
                                 <div class="finding-section-title">Description</div>
-                                <p class="mb-0 text-muted small" style="line-height: 1.5;">${finding.description || 'No description provided.'}</p>
+                                <p class="mb-0 text-muted small" style="line-height: 1.5;">${finding.description || 'No description.'}</p>
                             </div>
                             ${finding.recommendation ? `
                             <div class="mb-3">
@@ -1050,10 +1558,33 @@
                             ` : ''}
                             ${finding.details ? `
                             <div>
-                                <div class="finding-section-title">Technical Details / Evidence</div>
+                                <div class="finding-section-title">Technical Details</div>
                                 <pre class="bg-dark text-info p-2 rounded small mt-1 mb-0" style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; overflow-x: auto;">${finding.details}</pre>
                             </div>
                             ` : ''}
+                            <div class="mt-3 pt-3 border-top">
+                                <div class="d-flex flex-wrap justify-content-between align-items-center mb-2 gap-2">
+                                    <div class="finding-section-title mb-0"><i class="fa-solid fa-wand-magic-sparkles text-primary me-2"></i>AI Patch & Remediation Generator</div>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <button type="button" class="btn btn-outline-primary text-uppercase font-monospace" style="font-size: 0.75rem;" onclick="generateAIPatch('${escapedCheck}', ${index}, 'nginx', event)">Nginx</button>
+                                        <button type="button" class="btn btn-outline-primary text-uppercase font-monospace" style="font-size: 0.75rem;" onclick="generateAIPatch('${escapedCheck}', ${index}, 'apache', event)">Apache</button>
+                                        <button type="button" class="btn btn-outline-primary text-uppercase font-monospace" style="font-size: 0.75rem;" onclick="generateAIPatch('${escapedCheck}', ${index}, 'cloudflare', event)">Cloudflare</button>
+                                        <button type="button" class="btn btn-outline-primary text-uppercase font-monospace" style="font-size: 0.75rem;" onclick="generateAIPatch('${escapedCheck}', ${index}, 'python', event)">Python</button>
+                                        <button type="button" class="btn btn-outline-primary text-uppercase font-monospace" style="font-size: 0.75rem;" onclick="generateAIPatch('${escapedCheck}', ${index}, 'node', event)">Node.js</button>
+                                        <button type="button" class="btn btn-outline-primary text-uppercase font-monospace" style="font-size: 0.75rem;" onclick="generateAIPatch('${escapedCheck}', ${index}, 'php', event)">PHP</button>
+                                    </div>
+                                </div>
+                                <div id="ai-patch-container-${index}" class="d-none mt-2">
+                                    <div class="p-3 border rounded bg-dark-subtle" style="background-color: var(--accordion-body-bg);">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="small text-muted fw-bold text-uppercase" id="ai-patch-tech-${index}">Patch</span>
+                                            <button class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size: 0.75rem;" onclick="copyToClipboard('ai-patch-code-${index}')"><i class="fa-regular fa-copy"></i> Copy</button>
+                                        </div>
+                                        <div class="text-muted small mb-2" id="ai-patch-explanation-${index}" style="line-height: 1.5;"></div>
+                                        <pre class="bg-dark text-info p-3 rounded small mb-0" id="ai-patch-code-${index}" style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; overflow-x: auto; white-space: pre-wrap; max-height: 350px;"></pre>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -1061,18 +1592,305 @@
             });
         }
 
-        // Helper classes mappings
-        function getRiskRatingBadgeColor(rating) {
-            switch(rating.toLowerCase()) {
-                case 'critical': return '#ef4444';
-                case 'high': return '#f97316';
-                case 'medium': return '#eab308';
-                case 'low': return '#3b82f6';
-                case 'safe': return '#10b981';
-                default: return '#9ca3af';
+        // Run Script Integrity / Magecart scanner
+        async function runScriptScan() {
+            const btn = document.getElementById("btnScriptScan");
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-2"></i>Auditing Scripts...`;
+            
+            const url = document.getElementById("scriptTargetUrl").value;
+            
+            try {
+                const response = await fetch(`/api/scan/scripts?url=${encodeURIComponent(url)}`);
+                const report = await response.json();
+                
+                document.getElementById("scriptEmptyState").classList.add("d-none");
+                const resState = document.getElementById("scriptResultsState");
+                resState.classList.remove("d-none");
+                
+                if (report.status === "Success") {
+                    document.getElementById("scriptAuditedUrl").innerText = url;
+                    document.getElementById("scriptScanStatus").innerText = "Success";
+                    document.getElementById("scriptScanStatus").className = "fw-bold text-success";
+                    
+                    const findings = report.findings || [];
+                    
+                    // Determine Integrity threat status
+                    let hasTampered = false;
+                    findings.forEach(f => {
+                        if (f.check && (f.check.toLowerCase().includes("mismatch") || f.check.toLowerCase().includes("tampered"))) {
+                            hasTampered = true;
+                        }
+                    });
+                    
+                    const threatStatus = document.getElementById("scriptThreatStatus");
+                    if (hasTampered) {
+                        threatStatus.innerHTML = `<i class="fa-solid fa-triangle-exclamation me-1"></i>TAMPERED`;
+                        threatStatus.className = "fw-bold text-danger";
+                    } else {
+                        threatStatus.innerHTML = `<i class="fa-solid fa-circle-check me-1"></i>VERIFIED`;
+                        threatStatus.className = "fw-bold text-success";
+                    }
+                    
+                    document.getElementById("scriptVulnerabilitiesCount").innerText = findings.length;
+                    
+                    // Render findings
+                    const container = document.getElementById("scriptFindingsAccordion");
+                    container.innerHTML = "";
+                    
+                    if (findings.length === 0) {
+                        container.innerHTML = `<div class="text-center py-4 text-muted"><p>No script integrity or security anomalies detected.</p></div>`;
+                    } else {
+                        findings.forEach((f, idx) => {
+                            const badge = `badge-${f.severity.toLowerCase()}`;
+                            const id = `script-collapse-${idx}`;
+                            
+                            const card = document.createElement("div");
+                            card.className = "accordion-item";
+                            card.innerHTML = `
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#${id}">
+                                        <span class="text-truncate">${f.check}</span>
+                                        <span class="badge ${badge} text-uppercase px-2 py-1 ms-auto me-3">${f.severity}</span>
+                                    </button>
+                                </h2>
+                                <div id="${id}" class="accordion-collapse collapse" data-bs-parent="#scriptFindingsAccordion">
+                                    <div class="accordion-body">
+                                        <p class="small text-muted mb-2">${f.description}</p>
+                                        ${f.recommendation ? `
+                                        <div class="finding-section-title">Recommendation</div>
+                                        <p class="small text-muted mb-2">${f.recommendation}</p>
+                                        ` : ''}
+                                        ${f.details ? `
+                                        <div class="finding-section-title">Technical Details</div>
+                                        <pre class="bg-dark text-info p-2 rounded small mt-1 mb-0" style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; overflow-x: auto;">${f.details}</pre>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            `;
+                            container.appendChild(card);
+                        });
+                    }
+                } else {
+                    document.getElementById("scriptScanStatus").innerText = "Scan Failure";
+                    document.getElementById("scriptScanStatus").className = "fw-bold text-danger";
+                    alert(report.error || "Script audit failed.");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Script Scan crash.");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-magnifying-glass me-2"></i>Start Script Audit`;
             }
         }
-        
+
+        // AI Copilot context selection
+        function loadCopilotContext() {
+            const scanId = document.getElementById("copilotScanSelector").value;
+            const historyItem = scanHistoryData.find(item => item.id == scanId);
+            
+            if (historyItem) {
+                document.getElementById("copilotReportSummary").classList.remove("d-none");
+                document.getElementById("copilotSummaryUrl").innerText = historyItem.url;
+                const dt = new Date(historyItem.timestamp);
+                document.getElementById("copilotSummaryTime").innerText = dt.toLocaleDateString() + " " + dt.toLocaleTimeString();
+                
+                const badge = document.getElementById("copilotSummaryRating");
+                badge.innerText = historyItem.risk_rating;
+                badge.className = "badge text-uppercase " + getRatingBadgeClass(historyItem.risk_rating);
+                
+                // Enable inputs
+                document.getElementById("chatInput").disabled = false;
+                document.getElementById("btnSendChat").disabled = false;
+                
+                // Reset chatbox with greeting
+                document.getElementById("chatBox").innerHTML = `
+                    <div class="chat-message bot">
+                        Context scan for <b>${historyItem.url}</b> loaded successfully. Ask me how to remediate the vulnerabilities, or how to virtual-patch specific headers!
+                    </div>
+                `;
+            }
+        }
+
+        // Send query to AI Copilot
+        async function sendChatQuery() {
+            const input = document.getElementById("chatInput");
+            const prompt = input.value.trim();
+            if (!prompt) return;
+            
+            const scanId = document.getElementById("copilotScanSelector").value;
+            if (!scanId) return;
+            
+            // Append User message
+            const chatBox = document.getElementById("chatBox");
+            chatBox.innerHTML += `<div class="chat-message user">${prompt}</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+            
+            input.value = "";
+            input.disabled = true;
+            const btn = document.getElementById("btnSendChat");
+            btn.disabled = true;
+            
+            // Append loading bot message
+            const loadingId = "bot-loading-msg";
+            chatBox.innerHTML += `<div class="chat-message bot" id="${loadingId}"><i class="fa-solid fa-spinner fa-spin"></i> Copilot is thinking...</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+            
+            try {
+                const response = await fetch(`/api/scan/remediate?scan_id=${scanId}&user_prompt=${encodeURIComponent(prompt)}`, {
+                    method: "POST"
+                });
+                
+                const data = await response.json();
+                
+                // Remove loading
+                const loadingMsg = document.getElementById(loadingId);
+                if (loadingMsg) loadingMsg.remove();
+                
+                // Format reply
+                let reply = data.response || "No reply returned.";
+                // Simple markdown converter for code blocks in chatbox
+                reply = reply.replace(/```([\s\S]*?)```/g, "<pre class='bg-dark text-info p-2 rounded small' style='font-family: monospace; overflow-x:auto;'>$1</pre>");
+                reply = reply.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+                
+                chatBox.innerHTML += `<div class="chat-message bot">${reply}</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+                
+            } catch (err) {
+                console.error(err);
+                const loadingMsg = document.getElementById(loadingId);
+                if (loadingMsg) loadingMsg.remove();
+                chatBox.innerHTML += `<div class="chat-message bot text-danger">Failed to connect to AI Copilot: ${err.message}</div>`;
+            } finally {
+                input.disabled = false;
+                btn.disabled = false;
+            }
+        }
+
+        async function generateAIPatch(findingCheck, findingIndex, tech, event) {
+            event.stopPropagation();
+            if (!currentScanId) {
+                alert("Please load or run a scan context first.");
+                return;
+            }
+            
+            const container = document.getElementById(`ai-patch-container-${findingIndex}`);
+            const codeBox = document.getElementById(`ai-patch-code-${findingIndex}`);
+            const explBox = document.getElementById(`ai-patch-explanation-${findingIndex}`);
+            const techLabel = document.getElementById(`ai-patch-tech-${findingIndex}`);
+            
+            container.classList.remove("d-none");
+            techLabel.innerText = `${tech.toUpperCase()} Remediation Patch`;
+            explBox.innerHTML = "";
+            codeBox.innerText = "";
+            
+            // Set loading state
+            codeBox.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Generating ${tech.toUpperCase()} patch using Gemini...`;
+            
+            try {
+                const response = await fetch(`/api/scan/remediate/generate_patch?scan_id=${currentScanId}&finding_check=${encodeURIComponent(findingCheck)}&tech=${tech}`, {
+                    method: "POST"
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === "Success" || data.response) {
+                    let text = data.response || "No response returned.";
+                    
+                    // Separate code block from explanation if possible, or render everything nicely.
+                    let codeMatches = [...text.matchAll(/```(?:[a-zA-Z0-9]+)?([\s\S]*?)```/g)];
+                    if (codeMatches.length > 0) {
+                        let codeContent = codeMatches[0][1].trim();
+                        let explanation = text.replace(/```(?:[a-zA-Z0-9]+)?[\s\S]*?```/g, "").trim();
+                        
+                        explanation = explanation.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+                        explanation = explanation.replace(/\n/g, "<br>");
+                        
+                        explBox.innerHTML = explanation;
+                        codeBox.innerText = codeContent;
+                    } else {
+                        explBox.innerHTML = text.replace(/\n/g, "<br>").replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+                        codeBox.innerText = "# Config/Patch code could not be separated:\n" + text;
+                    }
+                } else {
+                    explBox.innerHTML = `<span class="text-danger">Failed to generate patch.</span>`;
+                    codeBox.innerText = data.error || data.response || "Unknown error occurred.";
+                }
+            } catch (err) {
+                console.error(err);
+                explBox.innerHTML = `<span class="text-danger">Error: ${err.message}</span>`;
+                codeBox.innerText = "Network request failed.";
+            }
+        }
+
+        async function generateConsolidatedAIPatch() {
+            if (!currentScanId) {
+                alert("Please load or run a scan context first.");
+                return;
+            }
+            
+            const tech = document.getElementById("avpAiStack").value;
+            const container = document.getElementById("avpAiContainer");
+            const placeholder = document.getElementById("avpAiPlaceholder");
+            const codeBox = document.getElementById("avpAiCode");
+            const explBox = document.getElementById("avpAiExplanation");
+            const titleLabel = document.getElementById("avpAiTitle");
+            
+            placeholder.classList.add("d-none");
+            container.classList.remove("d-none");
+            titleLabel.innerText = `Consolidated ${tech.toUpperCase()} Patch`;
+            explBox.innerHTML = "";
+            codeBox.innerText = "";
+            
+            // Set loading state
+            codeBox.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Consolidating scan findings and generating ${tech.toUpperCase()} security patch using Gemini...`;
+            
+            try {
+                const response = await fetch(`/api/scan/remediate/consolidated_patch?scan_id=${currentScanId}&tech=${tech}`, {
+                    method: "POST"
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === "Success" || data.response) {
+                    let text = data.response || "No response returned.";
+                    
+                    // Separate code block from explanation if possible, or render everything nicely.
+                    let codeMatches = [...text.matchAll(/```(?:[a-zA-Z0-9]+)?([\s\S]*?)```/g)];
+                    if (codeMatches.length > 0) {
+                        let codeContent = codeMatches[0][1].trim();
+                        let explanation = text.replace(/```(?:[a-zA-Z0-9]+)?[\s\S]*?```/g, "").trim();
+                        
+                        explanation = explanation.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+                        explanation = explanation.replace(/\n/g, "<br>");
+                        
+                        explBox.innerHTML = explanation;
+                        codeBox.innerText = codeContent;
+                    } else {
+                        explBox.innerHTML = text.replace(/\n/g, "<br>").replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+                        codeBox.innerText = "# Consolidated config code could not be separated:\n" + text;
+                    }
+                } else {
+                    explBox.innerHTML = `<span class="text-danger">Failed to generate consolidated patch.</span>`;
+                    codeBox.innerText = data.error || data.response || "Unknown error occurred.";
+                }
+            } catch (err) {
+                console.error(err);
+                explBox.innerHTML = `<span class="text-danger">Error: ${err.message}</span>`;
+                codeBox.innerText = "Network request failed.";
+            }
+        }
+
+        function copyToClipboard(elementId) {
+            const text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Copied to clipboard!");
+            }).catch(err => {
+                console.error("Failed to copy text: ", err);
+            });
+        }
+
         function getRatingBadgeClass(rating) {
             switch(rating.toLowerCase()) {
                 case 'critical': return 'badge-critical';
@@ -1080,14 +1898,17 @@
                 case 'medium': return 'badge-medium';
                 case 'low': return 'badge-low';
                 case 'safe': return 'badge-safe';
+                case 'blocked':
+                case 'unreachable':
+                case 'invalid':
+                case 'dns failure': return 'badge-critical';
                 default: return 'bg-secondary';
             }
         }
 
-        // Binary Particle Trail Canvas Implementation
+        // Particle Canvas
         const canvas = document.getElementById('particleCanvas');
         const ctx = canvas?.getContext('2d');
-        
         let mouseX = -1000;
         let mouseY = -1000;
         const particles = [];
@@ -1101,58 +1922,40 @@
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
 
-        // Global mouse movement listener
         window.addEventListener('mousemove', (e) => {
             mouseX = e.clientX;
             mouseY = e.clientY;
-            
-            // Update body spotlight gradient coordinates
             document.body.style.setProperty('--mouse-x', `${mouseX}px`);
             document.body.style.setProperty('--mouse-y', `${mouseY}px`);
-            
-            // Spawn a binary particle (0 or 1) on movement
             spawnBinaryParticle(mouseX, mouseY);
         });
 
         function spawnBinaryParticle(x, y) {
-            // Matrix/Hacking falling code drift:
-            // Slow downward drift, slight lateral spread
             const vx = (Math.random() - 0.5) * 0.4;
             const vy = 0.6 + Math.random() * 0.8;
-            
-            // Expanded cyber security hacking-style character array
             const cyberChars = ['0', '1', '{', '}', ';', '<', '>', '#', '$', '&', '[', ']', '*', '+', '%', '?', '!', '/'];
             const character = cyberChars[Math.floor(Math.random() * cyberChars.length)];
             
             particles.push({
-                x: x + (Math.random() - 0.5) * 10, // slight offset from cursor center
+                x: x + (Math.random() - 0.5) * 10,
                 y: y + (Math.random() - 0.5) * 10,
                 vx: vx,
                 vy: vy,
                 text: character,
-                size: 11 + Math.random() * 6, // dynamic font size
+                size: 11 + Math.random() * 6,
                 alpha: 1.0,
-                decay: 0.02 + Math.random() * 0.015 // fade duration
+                decay: 0.02 + Math.random() * 0.015
             });
         }
 
         function animateBinaryParticles() {
             if (!ctx || !canvas) return;
-            
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            
-            // Determine active color based on theme:
-            // Dark Mode -> Green (hacker style)
-            // Light Mode -> Orange (security alert style)
             const colorPrefix = isDark ? 'rgba(34, 197, 94, ' : 'rgba(249, 115, 22, ';
             
-            // Draw all active binary particles
             for (let i = particles.length - 1; i >= 0; i--) {
                 const p = particles[i];
-                
-                // Apply velocity vectors
                 p.x += p.vx;
                 p.y += p.vy;
                 p.alpha -= p.decay;
@@ -1162,26 +1965,153 @@
                     continue;
                 }
                 
-                // Draw text in digital format
                 ctx.beginPath();
                 ctx.font = `bold ${p.size}px "Courier New", Courier, monospace`;
                 ctx.fillStyle = colorPrefix + p.alpha + ')';
-                
-                // Glow effect for cathode-ray tube simulation
                 ctx.shadowBlur = 4;
                 ctx.shadowColor = colorPrefix + '0.4)';
-                
                 ctx.fillText(p.text, p.x, p.y);
-                
-                // Reset shadow values for next draw performance
                 ctx.shadowBlur = 0;
             }
-            
             requestAnimationFrame(animateBinaryParticles);
         }
-        
-        // Start animation loop
         requestAnimationFrame(animateBinaryParticles);
+
+        // ============================================================
+        // Supply-Chain / CVE Auditor Functions
+        // ============================================================
+        async function runSupplyChainScan() {
+            const urlInput = document.getElementById('scTargetUrl');
+            const btn = document.getElementById('btnRunSupplyChain');
+            const targetUrl = urlInput.value.trim();
+
+            if (!targetUrl) {
+                alert('Please enter a target URL.');
+                urlInput.focus();
+                return;
+            }
+
+            // UI: disable button, show loading
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Analyzing...';
+
+            // Reset previous results
+            document.getElementById('scSummaryBox').classList.add('d-none');
+            document.getElementById('scSbomPlaceholder').classList.remove('d-none');
+            document.getElementById('scSbomContent').classList.add('d-none');
+            document.getElementById('scCvePlaceholder').classList.remove('d-none');
+            document.getElementById('scCveContent').classList.add('d-none');
+
+            try {
+                const res = await fetch(`/api/scan/supply_chain?url=${encodeURIComponent(targetUrl)}`);
+                const data = await res.json();
+
+                if (data.status !== 'Success') {
+                    alert('Supply-chain scan failed: ' + (data.error || 'Unknown error'));
+                    return;
+                }
+
+                const { components, summary, findings } = data;
+
+                // ---- Update Summary Stats ----
+                document.getElementById('scTotalComponents').textContent = summary.total_components;
+                document.getElementById('scVulnComponents').textContent = summary.vulnerable_components;
+                document.getElementById('scTotalCves').textContent = summary.total_cves;
+                document.getElementById('scSummaryBox').classList.remove('d-none');
+
+                // ---- Render SBOM Table ----
+                const tbody = document.getElementById('scSbomTableBody');
+                tbody.innerHTML = '';
+
+                if (components.length === 0) {
+                    document.getElementById('scSbomPlaceholder').innerHTML = `
+                        <i class="fa-solid fa-circle-check fa-3x mb-3 text-success opacity-50"></i>
+                        <p>No third-party libraries detected on this page.</p>`;
+                    document.getElementById('scSbomPlaceholder').classList.remove('d-none');
+                } else {
+                    components.forEach(comp => {
+                        const cveCount = comp.cves ? comp.cves.length : 0;
+                        const statusBadge = cveCount > 0
+                            ? `<span class="badge bg-danger"><i class="fa-solid fa-triangle-exclamation me-1"></i>${cveCount} CVE${cveCount > 1 ? 's' : ''}</span>`
+                            : `<span class="badge bg-success"><i class="fa-solid fa-circle-check me-1"></i>Safe</span>`;
+                        const typeIcon = comp.type === 'script'
+                            ? '<i class="fa-brands fa-js text-warning me-1"></i>'
+                            : '<i class="fa-brands fa-css3-alt text-info me-1"></i>';
+
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td class="fw-semibold">${typeIcon}${escapeHtml(comp.name)}</td>
+                            <td><code>${escapeHtml(comp.version)}</code></td>
+                            <td><span class="badge bg-secondary">${comp.type}</span></td>
+                            <td>${cveCount}</td>
+                            <td>${statusBadge}</td>`;
+                        tbody.appendChild(row);
+                    });
+                    document.getElementById('scSbomPlaceholder').classList.add('d-none');
+                    document.getElementById('scSbomContent').classList.remove('d-none');
+                }
+
+                // ---- Render CVE Findings Accordion ----
+                const cveAccordion = document.getElementById('scCveAccordion');
+                cveAccordion.innerHTML = '';
+
+                // Filter findings that are actual CVE findings (FAIL status, not Info)
+                const cveFindings = (findings || []).filter(f => f.status === 'FAIL');
+
+                if (cveFindings.length === 0) {
+                    document.getElementById('scCvePlaceholder').innerHTML = `
+                        <i class="fa-solid fa-shield-check fa-3x mb-3 text-success opacity-50"></i>
+                        <p class="fw-semibold">No known CVEs found in the detected components. All clear!</p>`;
+                    document.getElementById('scCvePlaceholder').classList.remove('d-none');
+                    document.getElementById('scCveContent').classList.add('d-none');
+                } else {
+                    cveFindings.forEach((finding, idx) => {
+                        const sevClass = {
+                            'Critical': 'badge-critical',
+                            'High': 'badge-high',
+                            'Medium': 'badge-medium',
+                            'Low': 'badge-low'
+                        }[finding.severity] || 'badge-medium';
+
+                        const collapseId = `sc-cve-collapse-${idx}`;
+                        const headingId = `sc-cve-heading-${idx}`;
+
+                        const item = document.createElement('div');
+                        item.className = 'accordion-item';
+                        item.innerHTML = `
+                            <h2 class="accordion-header" id="${headingId}">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}">
+                                    <span class="badge ${sevClass} me-2">${finding.severity}</span>
+                                    <span class="text-truncate">${escapeHtml(finding.check)}</span>
+                                </button>
+                            </h2>
+                            <div id="${collapseId}" class="accordion-collapse collapse" data-bs-parent="#scCveAccordion">
+                                <div class="accordion-body small">
+                                    <p>${escapeHtml(finding.description)}</p>
+                                    ${finding.recommendation ? `<div class="alert alert-warning py-2 px-3 mt-2 small"><i class="fa-solid fa-wrench me-1"></i><strong>Recommendation:</strong> ${escapeHtml(finding.recommendation)}</div>` : ''}
+                                    ${finding.details ? `<pre class="bg-dark text-light p-2 rounded mt-2 small" style="white-space:pre-wrap;">${escapeHtml(finding.details)}</pre>` : ''}
+                                </div>
+                            </div>`;
+                        cveAccordion.appendChild(item);
+                    });
+                    document.getElementById('scCvePlaceholder').classList.add('d-none');
+                    document.getElementById('scCveContent').classList.remove('d-none');
+                }
+
+            } catch (err) {
+                alert('Error running supply-chain scan: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-magnifying-glass me-1"></i>Analyze Supply Chain';
+            }
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
     </script>
 </body>
 </html>
