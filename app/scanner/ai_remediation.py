@@ -30,6 +30,11 @@ def get_gemini_remediation(scan_id, user_prompt=None):
     gemini_key = os.getenv("GEMINI_API_KEY", "").strip()
     blackbox_key = os.getenv("BLACKBOX_API_KEY", "").strip()
 
+    cache_key = f"remediate_{scan_id}_{user_prompt or 'default'}"
+    with AI_CACHE_LOCK:
+        if cache_key in AI_CACHE:
+            return AI_CACHE[cache_key]
+
     if not gemini_key and not blackbox_key:
         return {
             "status": "Configuration Required",

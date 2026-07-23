@@ -274,6 +274,30 @@
             color: var(--text-main);
         }
 
+        /* Option Popup Dark Mode Fix & Dropdown Polish */
+        .form-select option, .form-select-sm option, select option {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 8px 12px;
+        }
+        [data-theme="dark"] .form-select option, 
+        [data-theme="dark"] .form-select-sm option,
+        [data-theme="dark"] select option {
+            background-color: #111827 !important;
+            color: #f9fafb !important;
+        }
+        [data-theme="light"] .form-select option, 
+        [data-theme="light"] .form-select-sm option,
+        [data-theme="light"] select option {
+            background-color: #ffffff !important;
+            color: #0f172a !important;
+        }
+        select#scanProfile {
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-radius: 10px;
+        }
+
         .badge {
             font-weight: 600;
             padding: 0.4em 0.8em;
@@ -542,7 +566,6 @@
                         <input type="url" id="targetUrl" class="form-control" placeholder="https://example.com" style="flex: 2;" required>
                         <select id="scanProfile" class="form-select" style="max-width: 150px; background-color: var(--card-bg); color: var(--text-main); border: 1px solid var(--card-border);">
                             <option value="full" selected>Full Audit</option>
-                            <option value="fast">Fast Scan</option>
                             <option value="ssl">SSL Only</option>
                             <option value="headers">Headers Only</option>
                         </select>
@@ -561,11 +584,6 @@
             <li class="nav-item" role="presentation">
                 <button class="nav-link active fw-semibold" id="nav-web-tab" data-bs-toggle="pill" data-bs-target="#panel-web" type="button" role="tab">
                     <i class="fa-solid fa-globe me-1"></i>Web Scanner
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link fw-semibold" id="nav-script-tab" data-bs-toggle="pill" data-bs-target="#panel-script" type="button" role="tab">
-                    <i class="fa-solid fa-shield-halved me-1"></i>Script / SRI Auditor
                 </button>
             </li>
             <li class="nav-item" role="presentation">
@@ -650,10 +668,10 @@
                                             <div><i class="fa-solid fa-globe me-2"></i><span id="reportReachability">Reachable [HTTP 200]</span></div>
                                         </div>
                                         <div class="mt-4 pt-1 d-flex gap-2">
-                                            <button class="btn btn-primary btn-sm flex-fill" id="btnDownloadPdf">
+                                            <button type="button" class="btn btn-primary btn-sm flex-fill" id="btnDownloadPdf" onclick="downloadPdfReport()">
                                                 <i class="fa-solid fa-file-pdf me-2"></i>PDF Report
                                             </button>
-                                            <button class="btn btn-outline-secondary btn-sm flex-fill" id="btnExportJson">
+                                            <button type="button" class="btn btn-outline-secondary btn-sm flex-fill" id="btnExportJson" onclick="exportJsonReport()">
                                                 <i class="fa-solid fa-file-code me-2"></i>Raw JSON
                                             </button>
                                         </div>
@@ -776,13 +794,13 @@
                                 <p class="text-muted small">Deploy these customized infrastructure rules to resolve detected header, CORS, and cookie vulnerability classes instantly.</p>
                                 <ul class="nav nav-tabs mb-2" id="avpTabs" role="tablist">
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="avp-nginx-tab" data-bs-toggle="tab" data-bs-target="#avp-nginx" type="button" role="tab">Nginx</button>
+                                        <button class="nav-link active" id="avp-nginx-tab" data-bs-toggle="tab" data-bs-target="#avp-nginx" type="button" role="tab"><i class="fa-solid fa-server text-success me-1"></i>Nginx</button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="avp-apache-tab" data-bs-toggle="tab" data-bs-target="#avp-apache" type="button" role="tab">Apache</button>
+                                        <button class="nav-link" id="avp-apache-tab" data-bs-toggle="tab" data-bs-target="#avp-apache" type="button" role="tab"><i class="fa-solid fa-feather text-warning me-1"></i>Apache</button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="avp-cf-tab" data-bs-toggle="tab" data-bs-target="#avp-cf" type="button" role="tab">Cloudflare</button>
+                                        <button class="nav-link" id="avp-cf-tab" data-bs-toggle="tab" data-bs-target="#avp-cf" type="button" role="tab"><i class="fa-solid fa-cloud text-info me-1"></i>Cloudflare WAF</button>
                                     </li>
                                     <li class="nav-item" role="presentation">
                                         <button class="nav-link" id="avp-ai-tab" data-bs-toggle="tab" data-bs-target="#avp-ai" type="button" role="tab"><i class="fa-solid fa-wand-magic-sparkles text-primary me-1"></i>AI Consolidated Patch</button>
@@ -835,59 +853,7 @@
 
 
 
-            <!-- Panel 2.5: Magecart & Script Auditor -->
-            <div class="tab-pane fade" id="panel-script" role="tabpanel">
-                <div class="row">
-                    <!-- Form input card -->
-                    <div class="col-md-5 mb-4">
-                        <div class="card p-3 h-100">
-                            <h5 class="fw-bold mb-3"><i class="fa-solid fa-shield-halved text-primary me-2"></i>Script & SRI Auditor</h5>
-                            <p class="text-muted small">Analyze all client-side JavaScript tags and stylesheets embedded in a website. WebGuard checks for Subresource Integrity (SRI) hashes, verifies SRI cryptographic signatures, and hashes script content for drift detection.</p>
-                            <form id="scriptAuditForm" onsubmit="event.preventDefault(); runScriptScan();" class="mt-2">
-                                <div class="mb-3">
-                                    <label for="scriptTargetUrl" class="form-label small fw-bold">Target Website URL</label>
-                                    <input type="url" id="scriptTargetUrl" class="form-control" placeholder="https://example.com" required>
-                                </div>
-                                <button class="btn btn-primary w-100" type="submit" id="btnScriptScan">
-                                    <i class="fa-solid fa-magnifying-glass me-2"></i>Start Script Audit
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                    <!-- Audit results card -->
-                    <div class="col-md-7">
-                        <div class="card p-3 h-100">
-                            <div id="scriptEmptyState" class="text-center py-5 text-muted">
-                                <i class="fa-solid fa-code-compare fa-3x mb-3 text-secondary"></i>
-                                <h6 class="fw-semibold">No Script Audit Performed Yet</h6>
-                                <p class="small mb-0">Enter a website URL on the left panel to scan its client-side JavaScript tags.</p>
-                            </div>
-                            <div id="scriptResultsState" class="d-none">
-                                <h5 class="fw-bold mb-3 d-flex align-items-center justify-content-between">
-                                    <span>Audit Report for: <span id="scriptAuditedUrl" class="text-muted small font-monospace"></span></span>
-                                    <span id="scriptScanStatus" class="fw-bold text-success">Success</span>
-                                </h5>
-                                <div class="card p-3 mb-3" style="background-color: rgba(79, 70, 229, 0.03);">
-                                    <div class="row text-center">
-                                        <div class="col-6 border-end">
-                                            <div class="small text-muted mb-1">Integrity Status</div>
-                                            <div id="scriptThreatStatus" class="fw-bold text-success"><i class="fa-solid fa-circle-check me-1"></i>CLEAN</div>
-                                        </div>
-                                        <div class="col-6">
-                                            <div class="small text-muted mb-1">Script Vulnerabilities</div>
-                                            <div id="scriptVulnerabilitiesCount" class="fw-bold text-main">0</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card p-3">
-                                    <h6 class="fw-bold text-muted mb-3">Script Findings & Integrity Violations</h6>
-                                    <div class="accordion" id="scriptFindingsAccordion"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
 
             <!-- Panel 2.7: Supply-Chain / CVE Auditor -->
             <div class="tab-pane fade" id="panel-supplychain" role="tabpanel">
@@ -898,7 +864,10 @@
                             <h5 class="fw-bold mb-3"><i class="fa-solid fa-link text-primary me-2"></i>Supply-Chain Analysis</h5>
                             <p class="text-muted small">Automatically fingerprint all third-party JavaScript and CSS libraries loaded on a target page, identify their exact versions using CDN URL patterns and content-based regex, and cross-reference them in real time against the <strong>OSV.dev</strong> vulnerability database for known CVEs.</p>
                             <div class="mb-3">
-                                <label class="form-label fw-semibold">Target URL</label>
+                                <label class="form-label fw-semibold d-flex justify-content-between align-items-center">
+                                    <span>Target URL</span>
+                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle" style="font-size: 0.7rem;"><i class="fa-solid fa-bolt me-1"></i>Auto-included in Full Audit</span>
+                                </label>
                                 <input type="url" class="form-control" id="scTargetUrl" placeholder="https://example.com" required>
                             </div>
                             <button class="btn btn-primary w-100" id="btnRunSupplyChain" onclick="runSupplyChainScan()">
@@ -933,8 +902,20 @@
                     <div class="col-md-7 mb-4">
                         <div class="card p-3 h-100">
                             <ul class="nav nav-tabs mb-3" role="tablist">
-                                <li class="nav-item"><button class="nav-link active fw-semibold" data-bs-toggle="tab" data-bs-target="#sc-sbom-tab" type="button" role="tab"><i class="fa-solid fa-list-check me-1"></i>SBOM Inventory</button></li>
-                                <li class="nav-item"><button class="nav-link fw-semibold" data-bs-toggle="tab" data-bs-target="#sc-cve-tab" type="button" role="tab"><i class="fa-solid fa-bug me-1"></i>CVE Findings</button></li>
+                                <li class="nav-item">
+                                    <button class="nav-link active fw-semibold d-flex align-items-center" data-bs-toggle="tab" data-bs-target="#sc-sbom-tab" type="button" role="tab">
+                                        <i class="fa-solid fa-boxes-stacked text-primary me-1.5"></i>
+                                        <span>SBOM Inventory</span>
+                                        <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle ms-2" id="scSbomBadge">0</span>
+                                    </button>
+                                </li>
+                                <li class="nav-item">
+                                    <button class="nav-link fw-semibold d-flex align-items-center" data-bs-toggle="tab" data-bs-target="#sc-cve-tab" type="button" role="tab">
+                                        <i class="fa-solid fa-shield-virus text-danger me-1.5"></i>
+                                        <span>CVE Findings</span>
+                                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle ms-2" id="scCveBadge">0</span>
+                                    </button>
+                                </li>
                             </ul>
                             <div class="tab-content">
                                 <!-- SBOM Tab -->
@@ -982,7 +963,7 @@
                     <div class="col-md-4 mb-4">
                         <div class="card p-3 h-100">
                             <h5 class="fw-bold mb-3"><i class="fa-solid fa-robot text-primary me-2"></i>Select Context Scan</h5>
-                            <p class="text-muted small">Select a target history scan to load as context for the AI Copilot. The AI agent will explain vulnerabilities and write custom patches for this target.</p>
+                            <p class="text-muted small">Select a target history scan to load as context for the AI Copilot. The AI agent will explain vulnerabilities and write custom patches for this target.<br><small class="text-warning-emphasis d-block mt-2"><i class="fa-solid fa-triangle-exclamation me-1"></i><strong>Note:</strong> AI can make mistakes — please inspect and verify code manually for bugs before deployment.</small></p>
                             <select class="form-select mb-3" id="copilotScanSelector" onchange="loadCopilotContext()">
                                 <option value="" disabled selected>Select scan history...</option>
                             </select>
@@ -1020,6 +1001,10 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <script>
+        const API_BASE = (window.location.protocol === 'file:' || (window.location.port && window.location.port !== '8000'))
+            ? 'http://127.0.0.1:8000'
+            : '';
+
         let currentScanId = null;
         let scanHistoryData = [];
         let activeFindings = [];
@@ -1058,45 +1043,64 @@
             }
         }
 
+        function downloadPdfReport() {
+            const targetId = currentScanId || (scanHistoryData && scanHistoryData.length > 0 ? scanHistoryData[0].id : null);
+            if (targetId) {
+                window.open(`${API_BASE}/api/scan/${targetId}/pdf`, '_blank');
+            } else {
+                alert("Please select or run a scan first to view the PDF report.");
+            }
+        }
+
+        function exportJsonReport() {
+            const targetId = currentScanId || (scanHistoryData && scanHistoryData.length > 0 ? scanHistoryData[0].id : null);
+            if (targetId) {
+                window.open(`${API_BASE}/api/scan/${targetId}/json`, '_blank');
+            } else {
+                alert("Please select or run a scan first to view raw JSON.");
+            }
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
             updateThemeButton(savedTheme);
             
             loadHistory();
+
+            // Auto-sync top target URL input to sub-module forms
+            const targetUrlInput = document.getElementById("targetUrl");
+            if (targetUrlInput) {
+                targetUrlInput.addEventListener("input", (e) => {
+                    const val = e.target.value;
+                    const scInput = document.getElementById("scTargetUrl");
+                    if (scInput) scInput.value = val;
+                });
+            }
             
-            document.getElementById("scanForm").addEventListener("submit", (e) => {
-                e.preventDefault();
-                runScan();
-            });
+            const scanForm = document.getElementById("scanForm");
+            if (scanForm) {
+                scanForm.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    runScan();
+                });
+            }
 
-            document.getElementById("apiSpecForm").addEventListener("submit", (e) => {
-                e.preventDefault();
-                runApiScan();
-            });
+            const chatForm = document.getElementById("chatForm");
+            if (chatForm) {
+                chatForm.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    sendChatQuery();
+                });
+            }
 
-            document.getElementById("chatForm").addEventListener("submit", (e) => {
-                e.preventDefault();
-                sendChatQuery();
-            });
 
-            document.getElementById("btnDownloadPdf").addEventListener("click", () => {
-                if (currentScanId) {
-                    window.open(`/api/scan/${currentScanId}/pdf`, "_blank");
-                }
-            });
-
-            document.getElementById("btnExportJson").addEventListener("click", () => {
-                if (currentScanId) {
-                    window.open(`/api/scan/${currentScanId}/json`, "_blank");
-                }
-            });
 
             setInterval(async () => {
                 const badge = document.getElementById("systemStatusBadge");
                 if (!badge) return;
                 try {
-                    const res = await fetch("/api/history");
+                    const res = await fetch(`${API_BASE}/api/history`);
                     if (res.ok) {
                         badge.className = "badge bg-success-subtle text-success border border-success-subtle px-3 py-2";
                         badge.innerHTML = `<i class="fa-solid fa-circle-check me-1"></i>[SYSTEM: ACTIVE]`;
@@ -1113,7 +1117,7 @@
         // Load History list and sync with AI Copilot dropdown
         async function loadHistory() {
             try {
-                const response = await fetch("/api/history");
+                const response = await fetch(`${API_BASE}/api/history`);
                 const data = await response.json();
                 scanHistoryData = data;
                 
@@ -1157,6 +1161,10 @@
                     opt.text = `${item.url} (${formattedDate})`;
                     copilotSelector.appendChild(opt);
                 });
+
+                if (!currentScanId && data.length > 0) {
+                    selectHistoryItem(data[0].id);
+                }
             } catch (err) {
                 console.error("Error loading history:", err);
                 document.getElementById("historyList").innerHTML = `<div class="text-center py-5 text-danger"><p>Failed to load history</p></div>`;
@@ -1172,7 +1180,7 @@
             document.getElementById("consoleWrapper").classList.add("d-none");
             
             try {
-                const response = await fetch(`/api/scan/${id}`);
+                const response = await fetch(`${API_BASE}/api/scan/${id}`);
                 if (!response.ok) throw new Error("Failed to load details");
                 const report = await response.json();
                 populateDashboard(report);
@@ -1190,7 +1198,7 @@
                 return;
             }
             try {
-                const response = await fetch(`/api/scan/${id}`, {
+                const response = await fetch(`${API_BASE}/api/scan/${id}`, {
                     method: 'DELETE'
                 });
                 const resData = await response.json();
@@ -1238,7 +1246,7 @@
             
             try {
                 const profile = document.getElementById("scanProfile").value;
-                const response = await fetch(`/api/scan?url=${encodeURIComponent(url)}&profile=${profile}`, {
+                const response = await fetch(`${API_BASE}/api/scan?url=${encodeURIComponent(url)}&profile=${profile}`, {
                     method: "POST"
                 });
                 
@@ -1369,6 +1377,19 @@
             activeCounts = counts;
             renderSeverityChart(counts);
             updateTrendChart(report.url);
+
+            // Auto-sync target URL inputs across all sub-modules
+            if (report.url) {
+                const scInput = document.getElementById("scTargetUrl");
+                const scriptInput = document.getElementById("scriptTargetUrl");
+                if (scInput) scInput.value = report.url;
+                if (scriptInput) scriptInput.value = report.url;
+            }
+
+            // Auto-populate Supply-Chain sub-module if components exist
+            if (report.supply_chain_components && Array.isArray(report.supply_chain_components)) {
+                renderSupplyChainReportData(report.supply_chain_components, report.findings || []);
+            }
 
             // Populate Virtual Patches
             const vPatches = report.virtual_patches || {nginx: "", apache: "", cloudflare: ""};
@@ -1592,99 +1613,6 @@
             });
         }
 
-        // Run Script Integrity / Magecart scanner
-        async function runScriptScan() {
-            const btn = document.getElementById("btnScriptScan");
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-2"></i>Auditing Scripts...`;
-            
-            const url = document.getElementById("scriptTargetUrl").value;
-            
-            try {
-                const response = await fetch(`/api/scan/scripts?url=${encodeURIComponent(url)}`);
-                const report = await response.json();
-                
-                document.getElementById("scriptEmptyState").classList.add("d-none");
-                const resState = document.getElementById("scriptResultsState");
-                resState.classList.remove("d-none");
-                
-                if (report.status === "Success") {
-                    document.getElementById("scriptAuditedUrl").innerText = url;
-                    document.getElementById("scriptScanStatus").innerText = "Success";
-                    document.getElementById("scriptScanStatus").className = "fw-bold text-success";
-                    
-                    const findings = report.findings || [];
-                    
-                    // Determine Integrity threat status
-                    let hasTampered = false;
-                    findings.forEach(f => {
-                        if (f.check && (f.check.toLowerCase().includes("mismatch") || f.check.toLowerCase().includes("tampered"))) {
-                            hasTampered = true;
-                        }
-                    });
-                    
-                    const threatStatus = document.getElementById("scriptThreatStatus");
-                    if (hasTampered) {
-                        threatStatus.innerHTML = `<i class="fa-solid fa-triangle-exclamation me-1"></i>TAMPERED`;
-                        threatStatus.className = "fw-bold text-danger";
-                    } else {
-                        threatStatus.innerHTML = `<i class="fa-solid fa-circle-check me-1"></i>VERIFIED`;
-                        threatStatus.className = "fw-bold text-success";
-                    }
-                    
-                    document.getElementById("scriptVulnerabilitiesCount").innerText = findings.length;
-                    
-                    // Render findings
-                    const container = document.getElementById("scriptFindingsAccordion");
-                    container.innerHTML = "";
-                    
-                    if (findings.length === 0) {
-                        container.innerHTML = `<div class="text-center py-4 text-muted"><p>No script integrity or security anomalies detected.</p></div>`;
-                    } else {
-                        findings.forEach((f, idx) => {
-                            const badge = `badge-${f.severity.toLowerCase()}`;
-                            const id = `script-collapse-${idx}`;
-                            
-                            const card = document.createElement("div");
-                            card.className = "accordion-item";
-                            card.innerHTML = `
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#${id}">
-                                        <span class="text-truncate">${f.check}</span>
-                                        <span class="badge ${badge} text-uppercase px-2 py-1 ms-auto me-3">${f.severity}</span>
-                                    </button>
-                                </h2>
-                                <div id="${id}" class="accordion-collapse collapse" data-bs-parent="#scriptFindingsAccordion">
-                                    <div class="accordion-body">
-                                        <p class="small text-muted mb-2">${f.description}</p>
-                                        ${f.recommendation ? `
-                                        <div class="finding-section-title">Recommendation</div>
-                                        <p class="small text-muted mb-2">${f.recommendation}</p>
-                                        ` : ''}
-                                        ${f.details ? `
-                                        <div class="finding-section-title">Technical Details</div>
-                                        <pre class="bg-dark text-info p-2 rounded small mt-1 mb-0" style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; overflow-x: auto;">${f.details}</pre>
-                                        ` : ''}
-                                    </div>
-                                </div>
-                            `;
-                            container.appendChild(card);
-                        });
-                    }
-                } else {
-                    document.getElementById("scriptScanStatus").innerText = "Scan Failure";
-                    document.getElementById("scriptScanStatus").className = "fw-bold text-danger";
-                    alert(report.error || "Script audit failed.");
-                }
-            } catch (err) {
-                console.error(err);
-                alert("Script Scan crash.");
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = `<i class="fa-solid fa-magnifying-glass me-2"></i>Start Script Audit`;
-            }
-        }
-
         // AI Copilot context selection
         function loadCopilotContext() {
             const scanId = document.getElementById("copilotScanSelector").value;
@@ -1738,7 +1666,7 @@
             chatBox.scrollTop = chatBox.scrollHeight;
             
             try {
-                const response = await fetch(`/api/scan/remediate?scan_id=${scanId}&user_prompt=${encodeURIComponent(prompt)}`, {
+                const response = await fetch(`${API_BASE}/api/scan/remediate?scan_id=${scanId}&user_prompt=${encodeURIComponent(prompt)}`, {
                     method: "POST"
                 });
                 
@@ -1749,7 +1677,7 @@
                 if (loadingMsg) loadingMsg.remove();
                 
                 // Format reply
-                let reply = data.response || "No reply returned.";
+                let reply = data.response || data.error || "No reply returned.";
                 // Simple markdown converter for code blocks in chatbox
                 reply = reply.replace(/```([\s\S]*?)```/g, "<pre class='bg-dark text-info p-2 rounded small' style='font-family: monospace; overflow-x:auto;'>$1</pre>");
                 reply = reply.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
@@ -1789,7 +1717,7 @@
             codeBox.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Generating ${tech.toUpperCase()} patch using Gemini...`;
             
             try {
-                const response = await fetch(`/api/scan/remediate/generate_patch?scan_id=${currentScanId}&finding_check=${encodeURIComponent(findingCheck)}&tech=${tech}`, {
+                const response = await fetch(`${API_BASE}/api/scan/remediate/generate_patch?scan_id=${currentScanId}&finding_check=${encodeURIComponent(findingCheck)}&tech=${tech}`, {
                     method: "POST"
                 });
                 
@@ -1847,7 +1775,7 @@
             codeBox.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Consolidating scan findings and generating ${tech.toUpperCase()} security patch using Gemini...`;
             
             try {
-                const response = await fetch(`/api/scan/remediate/consolidated_patch?scan_id=${currentScanId}&tech=${tech}`, {
+                const response = await fetch(`${API_BASE}/api/scan/remediate/consolidated_patch?scan_id=${currentScanId}&tech=${tech}`, {
                     method: "POST"
                 });
                 
@@ -2003,7 +1931,7 @@
             document.getElementById('scCveContent').classList.add('d-none');
 
             try {
-                const res = await fetch(`/api/scan/supply_chain?url=${encodeURIComponent(targetUrl)}`);
+                const res = await fetch(`${API_BASE}/api/scan/supply_chain?url=${encodeURIComponent(targetUrl)}`);
                 const data = await res.json();
 
                 if (data.status !== 'Success') {
@@ -2013,11 +1941,16 @@
 
                 const { components, summary, findings } = data;
 
-                // ---- Update Summary Stats ----
+                // ---- Update Summary Stats & Badges ----
                 document.getElementById('scTotalComponents').textContent = summary.total_components;
                 document.getElementById('scVulnComponents').textContent = summary.vulnerable_components;
                 document.getElementById('scTotalCves').textContent = summary.total_cves;
                 document.getElementById('scSummaryBox').classList.remove('d-none');
+
+                const sbomBadge = document.getElementById('scSbomBadge');
+                if (sbomBadge) sbomBadge.textContent = summary.total_components;
+                const cveBadge = document.getElementById('scCveBadge');
+                if (cveBadge) cveBadge.textContent = summary.total_cves;
 
                 // ---- Render SBOM Table ----
                 const tbody = document.getElementById('scSbomTableBody');
@@ -2103,6 +2036,66 @@
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fa-solid fa-magnifying-glass me-1"></i>Analyze Supply Chain';
+            }
+        }
+
+        function renderSupplyChainReportData(components, allFindings) {
+            const totalComp = components ? components.length : 0;
+            let vulnCompCount = 0;
+            let totalCveCount = 0;
+
+            if (components) {
+                components.forEach(comp => {
+                    const cves = comp.cves || [];
+                    if (cves.length > 0) {
+                        vulnCompCount++;
+                        totalCveCount += cves.length;
+                    }
+                });
+            }
+
+            document.getElementById('scTotalComponents').textContent = totalComp;
+            document.getElementById('scVulnComponents').textContent = vulnCompCount;
+            document.getElementById('scTotalCves').textContent = totalCveCount;
+            document.getElementById('scSummaryBox').classList.remove('d-none');
+
+            const sbomBadge = document.getElementById('scSbomBadge');
+            if (sbomBadge) sbomBadge.textContent = totalComp;
+            const cveBadge = document.getElementById('scCveBadge');
+            if (cveBadge) cveBadge.textContent = totalCveCount;
+
+            // Render SBOM Table
+            const tbody = document.getElementById('scSbomTableBody');
+            if (tbody) {
+                tbody.innerHTML = '';
+                if (!components || components.length === 0) {
+                    document.getElementById('scSbomPlaceholder').innerHTML = `
+                        <i class="fa-solid fa-circle-check fa-3x mb-3 text-success opacity-50"></i>
+                        <p>No third-party libraries detected on this page.</p>`;
+                    document.getElementById('scSbomPlaceholder').classList.remove('d-none');
+                    document.getElementById('scSbomContent').classList.add('d-none');
+                } else {
+                    components.forEach(comp => {
+                        const cveCount = comp.cves ? comp.cves.length : 0;
+                        const statusBadge = cveCount > 0
+                            ? `<span class="badge bg-danger"><i class="fa-solid fa-triangle-exclamation me-1"></i>${cveCount} CVE${cveCount > 1 ? 's' : ''}</span>`
+                            : `<span class="badge bg-success"><i class="fa-solid fa-circle-check me-1"></i>Safe</span>`;
+                        const typeIcon = comp.type === 'script'
+                            ? '<i class="fa-brands fa-js text-warning me-1"></i>'
+                            : '<i class="fa-brands fa-css3-alt text-info me-1"></i>';
+
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td class="fw-semibold">${typeIcon}${escapeHtml(comp.name)}</td>
+                            <td><code>${escapeHtml(comp.version)}</code></td>
+                            <td><span class="badge bg-secondary">${comp.type}</span></td>
+                            <td>${cveCount}</td>
+                            <td>${statusBadge}</td>`;
+                        tbody.appendChild(row);
+                    });
+                    document.getElementById('scSbomPlaceholder').classList.add('d-none');
+                    document.getElementById('scSbomContent').classList.remove('d-none');
+                }
             }
         }
 

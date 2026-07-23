@@ -29,8 +29,16 @@ from app.scanner.supply_chain import run_supply_chain_scan
 from app.scanner.ai_remediation import get_gemini_remediation
 
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 import threading
@@ -184,7 +192,7 @@ def api_scan_pdf(scan_id: int):
         
         pdf_bytes = generate_pdf_report(report)
         headers = {
-            'Content-Disposition': f'attachment; filename="webguard_report_{scan_id}.pdf"'
+            'Content-Disposition': f'inline; filename="webguard_report_{scan_id}.pdf"'
         }
         return Response(content=pdf_bytes, media_type="application/pdf", headers=headers)
     except Exception as e:
@@ -198,7 +206,7 @@ def api_scan_json(scan_id: int):
             return {"status": "Error", "error": "Scan report not found"}
             
         headers = {
-            'Content-Disposition': f'attachment; filename="webguard_report_{scan_id}.json"'
+            'Content-Disposition': f'inline; filename="webguard_report_{scan_id}.json"'
         }
         return Response(content=json.dumps(report, indent=2), media_type="application/json", headers=headers)
     except Exception as e:

@@ -57,12 +57,10 @@ try:
     check("Dashboard loads (HTTP 200)", r.status_code == 200)
     html = r.text
     check("Web Scanner tab present", "Web Scanner" in html)
-    check("Magecart / SRI Auditor tab present", "Magecart" in html)
+    check("Supply-Chain / CVE Auditor tab present", "Supply-Chain" in html)
     check("AI Remediation Copilot tab present", "AI Remediation Copilot" in html)
     check("Scan form present", "scanForm" in html)
-    check("Script audit form present", "scriptAuditForm" in html)
     check("Chat form present", "chatForm" in html)
-    check("runScriptScan() JS function", "runScriptScan" in html)
     check("Severity chart canvas", "severityChart" in html)
     check("Trend chart canvas", "trendChart" in html)
     check("Virtual patch (Nginx)", "patchNginx" in html)
